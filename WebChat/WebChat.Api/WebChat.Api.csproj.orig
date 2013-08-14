@@ -165,6 +165,10 @@
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\ChatsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+<<<<<<< HEAD
+    <Compile Include="Controllers\FileUploadController.cs" />
+=======
+>>>>>>> 02cac07e341596ba55519f3dbbe21be87d41157b
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
