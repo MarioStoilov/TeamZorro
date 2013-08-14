@@ -5,7 +5,7 @@
 var controllers = (function () {
     var updateTimer = null;
 
-    var rootUrl = "http://localhost:40643/api/";
+    var rootUrl = "http://zorochat.apphb.com/api/";
     var Controller = Class.create({
         init: function () {
             this.persister = persisters.get(rootUrl);
