@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="WebChatModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="WebChatModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityContainer Name="WebChatModelStoreContainer">
           <EntitySet Name="Chats" EntityType="WebChatModel.Store.Chats" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="sysdiagrams" EntityType="WebChatModel.Store.sysdiagrams" store:Type="Tables" Schema="dbo" />
@@ -43,6 +43,7 @@
           </Key>
           <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="Password" Type="nvarchar" Nullable="false" MaxLength="32" />
         </EntityType>
         <Association Name="FK_Chats_Users">
           <End Role="Users" Type="WebChatModel.Store.Users" Multiplicity="1" />
@@ -99,8 +100,7 @@
           <Parameter Name="new_diagramname" Type="nvarchar" Mode="In" />
         </Function>
         <Function Name="sp_upgraddiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="WebChatModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -176,6 +176,7 @@
           <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
           <NavigationProperty Name="Chats" Relationship="WebChatModel.FK_Chats_Users" FromRole="Users" ToRole="Chats" />
           <NavigationProperty Name="Chats1" Relationship="WebChatModel.FK_Chats_Users1" FromRole="Users" ToRole="Chats" />
+          <Property Type="String" Name="Password" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="FK_Chats_Users">
           <End Role="Users" Type="WebChatModel.User" Multiplicity="1" />
@@ -241,6 +242,7 @@
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="WebChatModel.User">
               <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="Password" ColumnName="Password" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
               </MappingFragment>

@@ -30,7 +30,7 @@ namespace WebChat.Repositories
 
         public UserModel Add(UserModel entity)
         {
-            User newUser = new User() { Name = entity.Name };
+            User newUser = new User() { Name = entity.Name, Password=entity.PassWord };
             this.userSet.Add(newUser);
             this.dbContext.SaveChanges();
 

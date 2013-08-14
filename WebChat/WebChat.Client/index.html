@@ -1,9 +1,31 @@
-﻿<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+﻿<!DOCTYPE HTML>
+
+<html>
+
 <head>
-    <title></title>
+
+    <title>HTML5 Multiple File Upload Sample</title>
+
 </head>
+
 <body>
 
+    <form action="http://localhost:47655/api/upload/" enctype="multipart/form-data" method="POST">
+
+    What is your name?
+
+    <input name="submitter" size="40" type="text"><br>
+
+    What files are you uploading?
+
+    <input name="data" type=file multiple>
+
+    <br>
+
+    <input type="submit" />
+
+    </form>
+
 </body>
+
 </html>
