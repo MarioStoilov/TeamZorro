@@ -23,8 +23,8 @@ var persisters = (function () {
         init: function (rootUrl) {
             this.rootUrl = rootUrl;
             this.user = new UserPersister(this.rootUrl);
-            this.game = new GamePersister(this.rootUrl);
-            this.message = new MessagesPersister(this.rootUrl);
+            //this.game = new GamePersister(this.rootUrl);
+            //this.message = new MessagesPersister(this.rootUrl);
         },
 
         isUserLoggedIn: function () {
@@ -59,7 +59,7 @@ var persisters = (function () {
             var userData = {
                 username: user.username,
                 nickname: user.nickname,
-                authCode: CryptoJS.SHA1(user.username + user.password).toString()
+                authCode: CryptoJS.MD5(user.username + user.password).toString()
             };
             httpRequester.postJSON(url, userData,
 				function (data) {
