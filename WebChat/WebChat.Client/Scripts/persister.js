@@ -1,6 +1,6 @@
-﻿/ <reference path="http-requester.js" />
-/ <reference path="class.js" />
-/ <reference path="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/md5.js" />
+﻿/// <reference path="http-requester.js" />
+/// <reference path="class.js" />
+/// <reference path="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/md5.js" />
 var persisters = (function () {
     var nickname = localStorage.getItem("nickname");
     var sessionKey = localStorage.getItem("sessionKey");
@@ -23,8 +23,8 @@ var persisters = (function () {
         init: function (rootUrl) {
             this.rootUrl = rootUrl;
             this.user = new UserPersister(this.rootUrl);
-            this.game = new GamePersister(this.rootUrl);
-            this.message = new MessagesPersister(this.rootUrl);
+            //this.game = new GamePersister(this.rootUrl);
+            //this.message = new MessagesPersister(this.rootUrl);
         },
 
         isUserLoggedIn: function () {
@@ -38,7 +38,7 @@ var persisters = (function () {
     });
     var UserPersister = Class.create({
         init: function (rootUrl) {
-            ...api/user/
+            //...api/user/
             this.rootUrl = rootUrl + "users/";
         },
         login: function (user, success, error) {
@@ -78,19 +78,19 @@ var persisters = (function () {
         }
     });
    
-    var ChatsPersister = Class.create({
-        init: function (url) {
-            this.rootUrl = url + "messages/";
-        },
-        unread: function (success, error) {
-            var url = this.rootUrl + "unread/" + sessionKey;
-            httpRequester.getJSON(url, success, error);
-        },
-        all: function (success, error) {
-            var url = this.rootUrl + "all/" + sessionKey;
-            httpRequester.getJSON(url, success, error);
-        }
-    });
+    //var ChatsPersister = Class.create({
+    //    init: function (url) {
+    //        this.rootUrl = url + "messages/";
+    //    },
+    //    unread: function (success, error) {
+    //        var url = this.rootUrl + "unread/" + sessionKey;
+    //        httpRequester.getJSON(url, success, error);
+    //    },
+    //    all: function (success, error) {
+    //        var url = this.rootUrl + "all/" + sessionKey;
+    //        httpRequester.getJSON(url, success, error);
+    //    }
+    //});
     return {
         get: function (url) {
             return new MainPersister(url);

@@ -5,6 +5,7 @@ var httpRequester = (function () {
             url: url,
             type: "GET",
             timeout: 5000,
+            //dataType: "jsonp",
             contentType: "application/json",
             success: success,
             error: error
@@ -14,6 +15,7 @@ var httpRequester = (function () {
         $.ajax({
             url: url,
             type: "POST",
+            //dataType: "jsonp",
             contentType: "application/json",
             timeout: 5000,
             data: JSON.stringify(data),

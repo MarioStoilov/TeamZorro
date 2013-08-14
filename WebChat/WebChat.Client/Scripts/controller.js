@@ -81,7 +81,7 @@ var controllers = (function () {
                 self.persister.user.register(user, function () {
                     self.loadGameUI(selector);
                 }, function (err) {
-                    wrapper.find("#error-messages").text(err.responseJSON.Message);
+                    //wrapper.find("#error-messages").text(err.responseJSON.Message);
                 });
                 return false;
             });
