@@ -42,6 +42,7 @@ namespace WebChat.Api.Controllers
         // POST api/chats
         public ChatModel Post([FromBody]ChatModel value)
         {
+            //TODO: get channel from pubnub
             return this.chatRepository.Add(value);
         }
 
