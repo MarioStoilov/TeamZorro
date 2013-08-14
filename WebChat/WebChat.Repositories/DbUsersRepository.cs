@@ -31,6 +31,10 @@ namespace WebChat.Repositories
         public UserModel Add(UserModel entity)
         {
             User newUser = new User() { Name = entity.Name, Password=entity.PassWord };
+            if (this.userSet.Any(u=> u.Name.ToLower()==entity.Name.ToLower()))
+            {
+                throw new ArgumentException("A user with this name already exists");
+            }
             this.userSet.Add(newUser);
             this.dbContext.SaveChanges();
 
