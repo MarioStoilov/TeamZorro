@@ -43,7 +43,7 @@ namespace WebChat.Api.Controllers
         }
 
 
-        [HttpPost]
+        //[HttpPost]
         public HttpResponseMessage Post()
         {
             HttpResponseMessage result = null;
