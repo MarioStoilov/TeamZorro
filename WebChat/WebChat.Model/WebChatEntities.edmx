@@ -61,7 +61,7 @@
           </Key>
           <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="50" />
-          <Property Name="Password" Type="nvarchar" Nullable="false" MaxLength="32" />
+          <Property Name="Password" Type="nvarchar" Nullable="false" MaxLength="50" />
           <Property Name="SessionKey" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <Association Name="FK_Chats_Users">
@@ -215,7 +215,7 @@
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Type="String" Name="Password" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Password" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="SessionKey" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Chats" Relationship="WebChatModel.FK_Chats_Users" FromRole="User" ToRole="Chat" />
           <NavigationProperty Name="Chats1" Relationship="WebChatModel.FK_Chats_Users1" FromRole="User" ToRole="Chat" />
