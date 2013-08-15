@@ -134,7 +134,7 @@ var ui = (function () {
     }
 
     function drawMessages(data) {
-        var elementsContainer = $('current-game-state').append($('<ul />'));
+        var elementsContainer = $('#current-game-state').append($('<ul />'));
 
         console.log(elementsContainer);
 
