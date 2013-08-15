@@ -41,7 +41,7 @@ var ui = (function () {
     function drawUserInteraction() {
         return '<div id="error-messages"></div>' +
                '<div id="messages"></div>' +
-               '<div id="game-state-container"></div>';
+               '<div id="current-chat-container"></div>';
     }
 
     function showAppErrorMessage(message) {
@@ -126,7 +126,7 @@ var ui = (function () {
         }
     }
 
-    function drawCreateGameMenu() {
+    function drawSendMessageMenu() {
         return '<div id="chat-user">' +
                     '<input id="message-text" type="text" name="name" value="" placeholder="Message" />' +
                     '<button id="confirm-send">Send</button>' +
@@ -134,27 +134,14 @@ var ui = (function () {
     }
 
     function drawMessages(data) {
-        var elementsContainer = $('current-game-state').append($('<ul />'));
-
-        console.log(elementsContainer);
+        $('#current-chat-state').empty();
+        var elementsContainer = $('#current-chat-state').append($('<ul />'));
+        elementsContainer = $('#current-chat-state ul')
 
         for (var i = 0; i < data.length; i++) {
             elementsContainer
-                .append($('<li />').attr('data-owner-id', data[i].OwnerId).text(data[i].Content));
-
-            console.log(data[i].Content);
-            console.log(data[i].OwnerId);
+                .append($('<li />').attr('data-owner-id', data[i].OwnerId).text(data[i].OwnerName + ': ' + data[i].Content));
         }
-
-
-
-        //return '<div id="game-user-join">' +
-        //            '<label for="join-game-number">Number </label>' +
-        //            '<input id="join-game-number" type="text" name="name" value="" placeholder="Enter your number" />' +
-        //            '<label for="join-game-password">Pasword </label>' +
-        //            '<input id="join-game-password" type="password" name="name" value="" placeholder="Enter game password" />' +
-        //            '<button id="confirm-join-game">OK</button>' +
-        //        '</div>';
     }
 
     function drawSidebars(persister) {
@@ -164,70 +151,9 @@ var ui = (function () {
             drawListOfChats(data, '#left-side-bar', 'My active chats', 'active');
         });
 
-        //persister.chat.open(function (data) {
-        //    drawListOfChats(data, '#left-side-bar', 'Open games', 'open');
-        //});
-
         persister.user.all(function (data) {
             drawListOfUsers(data, '#right-side-bar', 'Users', 'user');
         });
-    }
-
-    function drawCurrentGameState(currentState) {
-        //$('#game-state-container').empty();
-        var inTurn;
-        var blueUser = currentState.blue.nickname;
-        var redUser = currentState.red.nickname;
-
-        if (currentState.inTurn == 'blue') {
-            inTurn = 'In turn is: ' + blueUser;
-        }
-        else if (currentState.inTurn == 'red') {
-            inTurn = 'In turn is: ' + redUser;
-        }
-
-        $('#game-state-container')
-            .append($('<p />').attr('id', 'game-name').text(redUser + ' vs. ' + blueUser))
-            .append($('<p />').attr('id', 'game-state-text').text(inTurn))
-            .append($('<p />').attr('id', 'game-name').text('Game name: ' + currentState.title))
-            .append($('<p />').attr('id', 'game-state-turn').text('Turn: ' + currentState.turn));
-
-        $('#game-state-container table').attr('data-game-id', currentState.gameId);
-
-        var i = 0;
-
-        for (i = 0; i < currentState.red.units.length; i++) {
-            var redPosX = currentState.red.units[i].position.x;
-            var redPosY = currentState.red.units[i].position.y;
-            var redUnitType = currentState.red.units[i].type;
-            var redUnitID = currentState.red.units[i].id;
-
-            if (redUnitType == 'warrior') {
-                $('#game-state-container table tr td[data-pos-x=' + redPosX + '][data-pos-y=' + redPosY + ']').attr('data-unit-id', redUnitID).text('W');
-            }
-            else if (redUnitType == 'ranger') {
-                $('#game-state-container table tr td[data-pos-x=' + redPosX + '][data-pos-y=' + redPosY + ']').attr('data-unit-id', redUnitID).text('R');
-            }
-            
-        }
-
-        for (i = 0; i < currentState.blue.units.length; i++) {
-            var bluePosX = currentState.blue.units[i].position.x;
-            var bluePosY = currentState.blue.units[i].position.y;
-            var blueUnitType = currentState.blue.units[i].type;
-            var blueUnitID = currentState.blue.units[i].id;
-
-            if (blueUnitType == 'warrior') {
-                $('#game-state-container table tr td[data-pos-x=' + bluePosX + '][data-pos-y=' + bluePosY + ']').attr('data-unit-id', blueUnitID).text('W');
-            }
-            else if (blueUnitType == 'ranger') {
-                $('#game-state-container table tr td[data-pos-x=' + bluePosX + '][data-pos-y=' + bluePosY + ']').attr('data-unit-id', blueUnitID).text('R');
-            }
-        }
-    }
-
-    function drawChatArea() {
-
     }
 
     return {
@@ -241,11 +167,9 @@ var ui = (function () {
         clearErrorMessage: clearErrorMessage,
         drawListOfChats: drawListOfChats,
         drawListOfUsers: drawListOfUsers,
-        drawCreateGameMenu: drawCreateGameMenu,
+        drawSendMessageMenu: drawSendMessageMenu,
         drawMessages: drawMessages,
         drawSidebars: drawSidebars,
-        drawCurrentGameState: drawCurrentGameState,
-        showOrHideElements: showOrHideElements,
-        drawChatArea:drawChatArea
+        showOrHideElements: showOrHideElements
     };
 }());
