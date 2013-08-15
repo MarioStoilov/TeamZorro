@@ -53,10 +53,10 @@ namespace WebChat.Repositories
                 throw new ArgumentException("Invalid sessionKey");
             }
 
-            //if (this.chatSet.Any(c => (c.User1.Id==userById.Id && c.User2.Id==userByKey.Id) || (c.User2.Id==userById.Id && c.User1.Id==userByKey.Id)))
-            //{
-            //    throw new ArgumentException("Chat already exists");
-            //}
+            if (this.chatSet.Any(c => (c.User1.Id == userById.Id && c.User2.Id == userByKey.Id) || (c.User2.Id == userById.Id && c.User1.Id == userByKey.Id)))
+            {
+                throw new ArgumentException("Chat already exists");
+            }
             //TODO: Get channel
             Chat newChat = new Chat();
             if (userById.Id<userByKey.Id)
