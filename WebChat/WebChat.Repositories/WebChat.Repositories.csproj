@@ -96,8 +96,10 @@
   <ItemGroup>
     <Compile Include="App_Start\AttributeRoutingHttpConfig.cs" />
     <Compile Include="DbChatsRepository.cs" />
+    <Compile Include="DbMessagesRepository.cs" />
     <Compile Include="DbUsersRepository.cs" />
     <Compile Include="IRepositoryChats.cs" />
+    <Compile Include="IRepositoryMessages.cs" />
     <Compile Include="IRepositoryUsers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SerializableModels\ChatModel.cs" />

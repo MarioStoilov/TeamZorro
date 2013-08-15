@@ -8,7 +8,9 @@ namespace WebChat.Repositories.SerializableModels
 {
     public class SerializableMessage
     {
-        public UserModel Owner { get; set; }
+        public int OwnerId { get; set; }
+
+        public string OwnerName { get; set; }
 
         public string Content { get; set; }
     }
