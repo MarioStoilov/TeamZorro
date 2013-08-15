@@ -32,6 +32,7 @@ namespace WebChat.Api.Controllers
         public ChatModel Get(int id, string sessionKey)
         {
             return this.chatRepository.New(id, sessionKey);
+
         }
 
         [POST("senMessage/{id}/{sessionkey}")]
@@ -39,7 +40,5 @@ namespace WebChat.Api.Controllers
         {
             this.chatRepository.SendMessage(id, sessionkey, value.Content);
         }
-
-        
     }
 }

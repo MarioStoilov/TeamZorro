@@ -96,7 +96,7 @@ var persister = (function () {
 
             var url = this.url + '/senMessage/' + id + '/' + localStorage.getItem('authCode');
 
-            httpRequester.postJson(url, null, success, error);
+            httpRequester.postJson(url, message, success, error);
         },
         all: function (success, error) {
             var url = this.url + '/' + localStorage.getItem('authCode');
