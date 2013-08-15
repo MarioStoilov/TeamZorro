@@ -5,7 +5,7 @@
 /// <reference path="ui.js" />
 
 $(document).ready(function () {
-    var myMainPersister = persister.mainPersister('http://zorrochat.apphb.com/api');//47655
+    var myMainPersister = persister.mainPersister('http://localhost:47655/api');//47655
 
     // Check is user logged in
     if (localStorage.getItem('authCode') == '' || localStorage.getItem('authCode') == null || localStorage.getItem('authCode') == undefined) {
@@ -13,7 +13,7 @@ $(document).ready(function () {
     }
     else {
         $('#login-container').html(ui.drawLoggedIn());
-        $('#main-game-container').html(ui.drawUserInteraction());
+        $('#main-chat-container').html(ui.drawUserInteraction());
         $('#left-side-bar').html(ui.drawSidebars(myMainPersister));
     }
 
@@ -32,9 +32,10 @@ $(document).ready(function () {
                 $('#login-container').empty();
                 $('#left-side-bar').empty();
                 $('#right-side-bar').empty();
-                $('#main-game-container').empty();
-                $('#main-game-container').append($('<div />').attr('id', 'error-messages'));
-                $('#main-game-container').append($('<div />').attr('id', 'messages'));
+                $('#main-chat-container').empty();
+                $('#current-chat-state').empty();
+                $('#main-chat-container').append($('<div />').attr('id', 'error-messages'));
+                $('#main-chat-container').append($('<div />').attr('id', 'messages'));
                 $('#login-container').html(ui.drawLogIn());
 
                 persister.user.logout();
@@ -51,7 +52,7 @@ $(document).ready(function () {
                     if (localStorage.getItem('authCode') != '' && localStorage.getItem('authCode') != undefined) {
                         ui.clearErrorMessage();
                         $('#login-container').html(ui.drawLoggedIn());
-                        $('#main-game-container').html(ui.drawUserInteraction());
+                        $('#main-chat-container').html(ui.drawUserInteraction());
                         $('#left-side-bar').html(ui.drawSidebars(myMainPersister));
                     }
                 }, 500);
@@ -81,8 +82,8 @@ $(document).ready(function () {
                 if (isUsernameValid && isPasswordValid && isPasswordsEqual) {
                     persister.user.register(username, nickname, password, ui.showErrorMessage);
                     setTimeout(function () {
-                    $('#login-container').html(ui.drawLoggedIn());
-                    ui.clearErrorMessage();
+                        $('#login-container').html(ui.drawLoggedIn());
+                        ui.clearErrorMessage();
                     }, 500);
                 }
                 else {
@@ -94,7 +95,6 @@ $(document).ready(function () {
             $('#wrapper').on('click', '#users-user-list li a', function () {
                 var userID = $(this).parent('li').attr('data-user-id');
                 persister.chat.create(userID, function () {
-                    console.log(userID);
                     $('#left-side-bar').html(ui.drawSidebars(myMainPersister));
                 },
                 ui.showErrorMessage);
@@ -105,13 +105,11 @@ $(document).ready(function () {
                 var chatID = $(this).parent('li').attr('data-chat-id');
                 var channelID = $(this).parent('li').attr('data-chat-channel');
 
-                // TODO: draw ui
-                $('#game-state-container').html(ui.drawCreateGameMenu());
-                
+                $('#current-chat-container').html(ui.drawSendMessageMenu());
+
                 persister.messages.all(chatID,
                     function (data) {
                         ui.drawMessages(data);
-                        console.log(data);
                     })
             });
 
@@ -170,88 +168,12 @@ $(document).ready(function () {
                 //var gameNumber = $('#player-guess-text').val();
                 persister.game.field(gameID, function (data) {
                     ui.clearErrorMessage();
-                    $('#game-state-container').empty();
-                    $('#game-state-container').load('game-field.html', function () {
+                    $('#current-chat-container').empty();
+                    $('#current-chat-container').load('game-field.html', function () {
                         ui.drawCurrentGameState(data);
                     });
                 }, ui.showErrorMessage);
             });
-
-            // Move or attack
-        //    $('#wrapper').on('click', '#game-state-container table tr td', function () {
-        //        var currentState = $('#game-state-container table').attr('data-is-attacing');
-        //        var currentGameId = $('#game-state-container table').attr('data-game-id');
-        //        var currentUnitId = $(this).attr('data-unit-id');
-        //        var currentUnitPosX = $(this).attr('data-pos-x');
-        //        var currentUnitPosY = $(this).attr('data-pos-y');
-        //        var currentPosition = { x: currentUnitPosX, y: currentUnitPosY };
-
-        //        if (currentState == 'true') {
-        //            currentUnitId = localStorage.getItem('unit-id');
-
-        //            var attackerRange = localStorage.getItem('attacer-range');
-        //            var attackerPosX = localStorage.getItem('attacer-pos-x');
-        //            var attackerPosY = localStorage.getItem('attacer-pos-y');
-
-        //            var currentAttackRange = Math.abs(attackerPosX - currentUnitPosX) + Math.abs(attackerPosY - currentUnitPosY);
-        //            var isAttackPosible = attackerRange >= currentAttackRange;
-        //            var isOpponentUnit = $(this).attr('data-unit-id') != undefined;
-
-        //            if (isAttackPosible && isOpponentUnit) {
-        //                persister.battle.attack(currentGameId, currentUnitId, currentPosition, function () {
-        //                    ui.showMessage('Attack is success.');
-
-        //                    persister.game.field(currentGameId, function (data) {
-        //                        ui.clearErrorMessage();
-        //                        $('#game-state-container').empty();
-        //                        $('#game-state-container').load('game-field.html', function () {
-        //                            ui.drawCurrentGameState(data);
-        //                        });
-        //                    }, ui.showErrorMessage);
-        //                },
-        //                function (err) {
-        //                    ui.showErrorMessage(err);
-        //                });
-        //            }
-        //            else {
-        //                persister.battle.move(currentGameId, currentUnitId, currentPosition, function () {
-        //                    ui.showMessage('Move is success.');
-
-        //                    persister.game.field(currentGameId, function (data) {
-        //                        ui.clearErrorMessage();
-        //                        $('#game-state-container').empty();
-        //                        $('#game-state-container').load('game-field.html', function () {
-        //                            ui.drawCurrentGameState(data);
-        //                        });
-        //                    }, ui.showErrorMessage);
-        //                },
-        //                function (err) {
-        //                    ui.showErrorMessage(err);
-        //                });
-        //            }
-
-        //            $('#game-state-container table').attr('data-is-attacing', 'false');
-        //            localStorage.setItem('unit-id', '');
-        //            localStorage.setItem('unit-id', '');
-        //            localStorage.setItem('attacer-pos-x', '');
-        //            localStorage.setItem('attacer-pos-y', '');
-        //            localStorage.setItem('attacer-range', '');
-        //        }
-        //        else {
-        //            $('#game-state-container table').attr('data-is-attacing', 'true');
-        //            localStorage.setItem('unit-id', currentUnitId);
-
-        //            localStorage.setItem('attacer-pos-x', currentUnitPosX);
-        //            localStorage.setItem('attacer-pos-y', currentUnitPosY);
-
-        //            if ($(this).text() == 'W') {
-        //                localStorage.setItem('attacer-range', '1');
-        //            }
-        //            else if ($(this).text() == 'R') {
-        //                localStorage.setItem('attacer-range', '3');
-        //            }
-        //        }
-        //    });
         }
 
         return {

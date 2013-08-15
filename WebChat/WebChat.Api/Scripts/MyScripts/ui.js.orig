@@ -134,9 +134,15 @@ var ui = (function () {
     }
 
     function drawMessages(data) {
+<<<<<<< HEAD
         $('#current-chat-state').empty();
         var elementsContainer = $('#current-chat-state').append($('<ul />'));
         elementsContainer = $('#current-chat-state ul')
+=======
+        var elementsContainer = $('#current-game-state').append($('<ul />'));
+
+        console.log(elementsContainer);
+>>>>>>> 9ff87c5e896171a8fd73244d8e9ab86d7b7648b0
 
         for (var i = 0; i < data.length; i++) {
             elementsContainer
