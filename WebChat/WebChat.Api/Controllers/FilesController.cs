@@ -15,7 +15,8 @@ namespace WebChat.Api.Controllers
 {
     public class FilesController : ApiController
     {
-        private DropBox appAuth = new DropBox { Value = "3bly71r1syeaw48", Secret = "hzix2mrb4co75t2" };
+        private DropBox appAuth = new DropBox { Value = "avebpvpe2pr4o85", Secret = "bz5ysp3dsw0xh6l" };
+        private OAuthToken userAuth = new OAuthToken("tjhu30a56q0jcnr8", "gi6rcrdf2ovvjev");
         //private IRepository<Dropbox> data;
 
 
@@ -30,7 +31,6 @@ namespace WebChat.Api.Controllers
         {
             DropboxServiceProvider dropboxServiceProvider =
                 new DropboxServiceProvider(this.appAuth.Value, this.appAuth.Secret, AccessLevel.AppFolder);
-            OAuthToken userAuth = dropboxServiceProvider.OAuthOperations.FetchRequestTokenAsync(null, null).Result;
             IDropbox dropbox = dropboxServiceProvider.GetApi(userAuth.Value, userAuth.Secret);
 
 
