@@ -126,6 +126,7 @@ namespace WebChat.Api.Controllers
             DropboxServiceProvider dropboxServiceProvider =
                 new DropboxServiceProvider(this.appAuth.Value, this.appAuth.Secret, AccessLevel.AppFolder);
             IDropbox dropbox = dropboxServiceProvider.GetApi(userAuth.Value, userAuth.Secret);
+
             try
             {
                 var sharedUrl = dropbox.GetMediaLinkAsync("/" + userForImage.Id.ToString() + ".jpg").Result;
