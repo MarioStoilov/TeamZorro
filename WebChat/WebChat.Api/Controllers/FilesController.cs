@@ -135,8 +135,6 @@ namespace WebChat.Api.Controllers
             {
                 return null;
             }
-
-             // we can download the file directly
         }
     }
 }
