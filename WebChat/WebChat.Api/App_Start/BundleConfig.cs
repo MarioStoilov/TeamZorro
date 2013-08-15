@@ -9,7 +9,13 @@ namespace WebChat.Api
         public static void RegisterBundles(BundleCollection bundles)
         {
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
-                        "~/Scripts/jquery-{version}.js"));
+                        "~/Scripts/jquery-{version}.js",
+                        "~/Scripts/MyScripts/Class.js",
+                        "~/Scripts/MyScripts/http-requester.js",
+                        "~/Scripts/MyScripts/persister.js",
+                        "~/Scripts/MyScripts/validation-controler.js",
+                        "~/Scripts/MyScripts/ui.js",
+                        "~/Scripts/MyScripts/controller.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryui").Include(
                         "~/Scripts/jquery-ui-{version}.js"));
@@ -23,7 +29,12 @@ namespace WebChat.Api
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
                         "~/Scripts/modernizr-*"));
 
-            bundles.Add(new StyleBundle("~/Content/css").Include("~/Content/site.css"));
+            bundles.Add(new StyleBundle("~/Content/css").Include(
+                "~/Content/site.css",
+                "~/Content/MyStyles/common.css",
+                "~/Content/MyStyles/login.css",
+                "~/Content/MyStyles/register.css",
+                "~/Content/MyStyles/user-logged-in.css"));
 
             bundles.Add(new StyleBundle("~/Content/themes/base/css").Include(
                         "~/Content/themes/base/jquery.ui.core.css",
