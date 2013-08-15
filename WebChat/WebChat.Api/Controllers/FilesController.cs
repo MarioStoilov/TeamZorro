@@ -131,6 +131,7 @@ namespace WebChat.Api.Controllers
                 var sharedUrl = dropbox.GetMediaLinkAsync("/" + userForImage.Id.ToString() + ".jpg").Result;
                 return (sharedUrl.Url);
             }
+
             catch (AggregateException ex)
             {
                 return null;
