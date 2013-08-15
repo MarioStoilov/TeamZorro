@@ -1,181 +1,175 @@
-﻿var ui = (function () {
+﻿/// <reference path="../jquery-2.0.2.js" />
+/// <reference path="persister.js" />
 
-    function buildLoginForm() {
-        var html =
-            '<div id="login-form-holder">' +
-				'<form>' +
-					'<div id="login-form">' +
-						'<label for="tb-login-username">Username: </label>' +
-						'<input type="text" id="tb-login-username"><br />' +
-						'<label for="tb-login-password">Password: </label>' +
-						'<input type="text" id="tb-login-password"><br />' +
-						'<button id="btn-login" class="button">Login</button>' +
-					'</div>' +
-					'<div id="register-form" style="display: none">' +
-						'<label for="tb-register-username">Username: </label>' +
-						'<input type="text" id="tb-register-username"><br />' +
-						'<label for="tb-register-nickname">Nickname: </label>' +
-						'<input type="text" id="tb-register-nickname"><br />' +
-						'<label for="tb-register-password">Password: </label>' +
-						'<input type="text" id="tb-register-password"><br />' +
-                        '<label for="tb-register-password">Image: </label>' +
-                        //'<input id="tb-upload-image" class="button" type="file" name="files[]"><br/>' +
-						'<button id="btn-register" class="button">Register</button>' +
-					'</div>' +
-					'<a href="#" id="btn-show-login" class="button selected">Login</a>' +
-					'<a href="#" id="btn-show-register" class="button">Register</a>' +
-				'</form>' +
-				'<div id="error-messages"></div>' +
-            '</div>';
-        return html;
+var ui = (function () {
+    function drawLogInForm() {
+        return '<fieldset id="login-user-container">' +
+                    '<legend>Log In</legend>' +
+                    '<label for="login-user-nickname">Nickname</label>' +
+                    '<input id="login-user-nickname" type="text" name="name" value="" placeholder="Enter your nickname" autofocus="true" />' +
+                    '<label for="login-user-password">Password</label>' +
+                    '<input id="login-user-password" type="password" name="name" value="" placeholder="Enter your password" />' +
+                    '<button id="button-log-in">Log In</button>' +
+                    '<a id="register-now" href="#">Register now</a>' +
+                '</fieldset>';
     }
 
-    function buildGameUI(nickname) {
-        var html = '<span id="user-nickname">' +
-				nickname +
-		'</span>' +
-		'<button id="btn-logout">Logout</button><br/>' +
-		'<div id="create-game-holder">' +
-			'Title: <input type="text" id="tb-create-title" />' +
-			'Password: <input type="text" id="tb-create-pass" />' +
-			'Number: <input type="text" id="tb-create-number" />' +
-			'<button id="btn-create-game">Create</button>' +
-		'</div>' +
-		'<div id="open-games-container">' +
-			'<h2>Open</h2>' +
-			'<div id="open-games"></div>' +
-		'</div>' +
-		'<div id="active-games-container">' +
-			'<h2>Active</h2>' +
-			'<div id="active-games"></div>' +
-		'</div>' +
-		'<div id="game-holder">' +
-		'</div>' +
-		'<div id="messages-holder">' +
-		'</div>';
-        return html;
+    function drawRegisterForm() {
+        return '<fieldset id="register-user-container">' +
+                    '<legend>Register</legend>' +
+                    '<label for="register-user-name">Name</label>' +
+                    '<input id="register-user-name" type="text" name="name" value="" placeholder="Enter your first and last name" autofocus="true" />' +
+                    '<label for="register-user-nickname">Nickname</label>' +
+                    '<input id="register-user-nickname" type="text" name="name" value="" placeholder="Enter your nickname" />' +
+                    '<label for="register-user-password">Password</label>' +
+                    '<input id="register-user-password" type="password" name="name" value="" placeholder="Enter your password" />' +
+                    '<label for="register-user-password-re">Password</label>' +
+                    '<input id="register-user-password-re" type="password" name="name" value="" placeholder="Confirm your password" />' +
+                    '<a id="back-to-homepage" href="#" >Back</a>' +
+                    '<button id="button-register">Register</button>' +
+                '</fieldset>';
     }
 
-    function buildOpenGamesList(games) {
-        var list = '<ul class="game-list open-games">';
-        for (var i = 0; i < games.length; i++) {
-            var game = games[i];
-            list +=
-				'<li data-game-id="' + game.id + '">' +
-					'<a href="#" >' +
-						$("<div />").html(game.title).text() +
-					'</a>' +
-					'<span> by ' +
-						game.creatorNickname +
-					'</span>' +
-				'</li>';
+    function drawLoggedInForm() {
+        return '<div id="user-loged-in">' +
+                    '<p id="greetings">Hello, ' + localStorage.getItem('userNickname') + '</p>' +
+                    '<p>Let\'s chat ...</p>' +
+                    '<button id="button-logout">Log out</button>' +
+                '</div>';
+    }
+
+    function drawUserInteraction() {
+        return '<div id="error-messages"></div>' +
+               '<div id="messages"></div>' +
+               '<div id="current-chat-container"></div>';
+    }
+
+    function showAppErrorMessage(message) {
+        $('#error-messages').text(message);
+
+        setTimeout(function () {
+            $('#error-messages').text('');
+        }, 15000);
+    }
+
+    function showErrorMessage(err) {
+        //$('#error-messages').text(err.responseJSON.errCode + ': ' + err.responseJSON.Message);
+        $('#error-messages').text(err.responseJSON.Message);
+
+        setTimeout(function () {
+            $('#error-messages').text('');
+        }, 15000);
+    }
+
+    function showMessage(message) {
+        $('#messages').text(message);
+
+        setTimeout(function () {
+            $('#messages').text('');
+        }, 15000);
+    }
+
+    function clearErrorMessage() {
+        $('#error-messages').text('');
+    }
+
+    function showOrHideElements(elementID) {
+        if ($(elementID + '-list').hasClass('show')) {
+            $(elementID + '-list').hide(1500);
+            $(elementID + '-list').removeClass('show');
         }
-        list += "</ul>";
-        return list;
+        else {
+            $(elementID + '-list').show(1500);
+            $(elementID + '-list').addClass('show');
+        }
+
+        return false;
     }
 
-    function buildActiveGamesList(games) {
-        var gamesList = Array.prototype.slice.call(games, 0);
-        gamesList.sort(function (g1, g2) {
-            if (g1.status == g2.status) {
-                return g1.title > g2.title;
+    function drawListOfChats(myActiveChats, container, conatinerTitle, type) {
+        $(container)
+            .append($('<h2 />').attr('id', 'chats-' + type).text(conatinerTitle))
+            .append($('<ul />').attr({ 'id': 'chats-' + type + '-list', 'class': 'show' }));
+
+        var elementsContainer = $(container + ' #' + 'chats-' + type + '-list');
+
+        var currentUser = localStorage.getItem('userId');
+
+        for (var i = 0; i < myActiveChats.length; i++) {
+            var otherUser;
+
+            if (myActiveChats[i].User1.Id != currentUser) {
+                otherUser = myActiveChats[i].User1.Name;
             }
             else {
-                if (g1.status == "in-progress") {
-                    return -1;
-                }
+                otherUser = myActiveChats[i].User2.Name;
             }
-            return 1;
+
+
+            var currentLi = $('<li />').attr({ 'data-chat-id': myActiveChats[i].Id, 'data-chat-channel': myActiveChats[i].Channel })
+                .append($('<a />').attr('href', '#').text(otherUser));
+
+            elementsContainer.append(currentLi);
+        }
+    }
+
+    function drawListOfUsers(users, container, conatinerTitle, type) {
+        $(container)
+            .append($('<h2 />').attr('id', 'users-' + type).text(conatinerTitle))
+            .append($('<ul />').attr({ 'id': 'users-' + type + '-list', 'class': 'show' }));
+
+        var elementsContainer = $(container + ' #' + 'users-' + type + '-list');
+
+        for (var i = 0; i < users.length; i++) {
+            elementsContainer
+                .append($('<li />').attr('data-user-id', users[i].Id).append($('<a />').attr('href', '#').text(users[i].Name)));
+        }
+    }
+
+    function drawSendMessageMenu() {
+        return '<div id="chat-user">' +
+                    '<input id="message-text" type="text" name="name" value="" placeholder="Message" />' +
+                    '<button id="confirm-send">Send</button>' +
+                '</div>';
+    }
+
+    function drawMessages(data) {
+        $('#current-chat-state').empty();
+        var elementsContainer = $('#current-chat-state').append($('<ul />'));
+        elementsContainer = $('#current-chat-state ul')
+
+        for (var i = 0; i < data.length; i++) {
+            elementsContainer
+                .append($('<li />').attr('data-owner-id', data[i].OwnerId).text(data[i].OwnerName + ': ' + data[i].Content));
+        }
+    }
+
+    function drawSidebars(persister) {
+        $('#left-side-bar').empty();
+        $('#right-side-bar').empty();
+        persister.chat.all(function (data) {
+            drawListOfChats(data, '#left-side-bar', 'My active chats', 'active');
         });
 
-        var list = '<ul class="game-list active-games">';
-        for (var i = 0; i < gamesList.length; i++) {
-            var game = gamesList[i];
-            list +=
-				'<li class="game-status-' + game.status + '" data-game-id="' + game.id + '" data-creator="' + game.creatorNickname + '">' +
-					'<a href="#" class="btn-active-game">' +
-						$("<div />").html(game.title).text() +
-					'</a>' +
-					'<span> by ' +
-						game.creatorNickname +
-					'</span>' +
-				'</li>';
-        }
-        list += "</ul>";
-        return list;
-    }
-
-    function buildGuessTable(guesses) {
-        var tableHtml =
-			'<table border="1" cellspacing="0" cellpadding="5">' +
-				'<tr>' +
-					'<th>Number</th>' +
-					'<th>Cows</th>' +
-					'<th>Bulls</th>' +
-				'</tr>';
-        for (var i = 0; i < guesses.length; i++) {
-            var guess = guesses[i];
-            tableHtml +=
-				'<tr>' +
-					'<td>' +
-						guess.number +
-					'</td>' +
-					'<td>' +
-						guess.cows +
-					'</td>' +
-					'<td>' +
-						guess.bulls +
-					'</td>' +
-				'</tr>';
-        }
-        tableHtml += '</table>';
-        return tableHtml;
-    }
-
-    function buildGameState(gameState) {
-        var html =
-			'<div id="game-state" data-game-id="' + gameState.id + '">' +
-				'<h2>' + gameState.title + '</h2>' +
-				'<div id="blue-guesses" class="guess-holder">' +
-					'<h3>' +
-						gameState.blue + '\'s gueesses' +
-					'</h3>' +
-					buildGuessTable(gameState.blueGuesses) +
-				'</div>' +
-				'<div id="red-guesses" class="guess-holder">' +
-					'<h3>' +
-						gameState.red + '\'s gueesses' +
-					'</h3>' +
-					buildGuessTable(gameState.redGuesses) +
-				'</div>' +
-		'</div>';
-        return html;
-    }
-
-    function buildChatsList(chats) {
-        var list = '<ul class="chats-list">';
-        var chat;
-        for (var i = 0; i < messages.length; i += 1) {
-            chat = chats[i];
-            var item =
-				'<li>' +
-					'<a href="#" class="chat-state-' + chat.state + '">' +
-						chat.text +
-					'</a>' +
-				'</li>';
-            list += item;
-        }
-        list += '</ul>';
-        return list;
+        persister.user.all(function (data) {
+            drawListOfUsers(data, '#right-side-bar', 'Users', 'user');
+        });
     }
 
     return {
-        gameUI: buildGameUI,
-        openGamesList: buildOpenGamesList,
-        loginForm: buildLoginForm,
-        activeGamesList: buildActiveGamesList,
-        gameState: buildGameState,
-        messagesList: buildChatsList
-    }
-
+        drawLogIn: drawLogInForm,
+        drawRegister: drawRegisterForm,
+        drawLoggedIn: drawLoggedInForm,
+        drawUserInteraction: drawUserInteraction,
+        showAppErrorMessage: showAppErrorMessage,
+        showErrorMessage: showErrorMessage,
+        showMessage: showMessage,
+        clearErrorMessage: clearErrorMessage,
+        drawListOfChats: drawListOfChats,
+        drawListOfUsers: drawListOfUsers,
+        drawSendMessageMenu: drawSendMessageMenu,
+        drawMessages: drawMessages,
+        drawSidebars: drawSidebars,
+        showOrHideElements: showOrHideElements
+    };
 }());

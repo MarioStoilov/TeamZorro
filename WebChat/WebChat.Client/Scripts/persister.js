@@ -1,99 +1,124 @@
-﻿/// <reference path="http-requester.js" />
-/// <reference path="class.js" />
-/// <reference path="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/md5.js" />
-var persisters = (function () {
-    var nickname = localStorage.getItem("nickname");
-    var sessionKey = localStorage.getItem("sessionKey");
+﻿/// <reference path="../jquery-2.0.2.js" />
+/// <reference path="http-requester.js" />
+/// <reference path="Class.js" />
+/// <reference path="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/sha1.js" />
 
-    function saveUserData(userData) {
-        localStorage.setItem("nickname", userData.nickname);
-        localStorage.setItem("sessionKey", userData.sessionKey);
-        nickname = userData.nickname;
-        sessionKey = userData.sessionKey;
-    }
+var persister = (function () {
+    var authCode = localStorage.getItem('authCode');
+    var mainUrl = '';
 
-    function clearUserData() {
-        localStorage.removeItem("nickname");
-        localStorage.removeItem("sessionKey");
-        nickname = "";
-        sessionKey = "";
-    }
-
-    var MainPersister = Class.create({
-        init: function (rootUrl) {
-            this.rootUrl = rootUrl;
-            this.user = new UserPersister(this.rootUrl);
-            //this.game = new GamePersister(this.rootUrl);
-            //this.message = new MessagesPersister(this.rootUrl);
+    var mainPersister = Class.create({
+        init: function (url) {
+            this.url = url;
+            mainUrl = url;
+            this.user = new user(this.url);
+            this.chat = new chat();
+            this.messages = new messages();
         },
-
         isUserLoggedIn: function () {
-            var isLoggedIn = nickname != null && sessionKey != null;
+            isLoggedIn = (localStorage.getItem('authCode') != '' && localStorage.getItem('authCode') != undefined);
             return isLoggedIn;
-        },
-
-        nickname: function () {
-            return nickname;
         }
     });
-    var UserPersister = Class.create({
-        init: function (rootUrl) {
-            //...api/user/
-            this.rootUrl = rootUrl + "users/";
+
+    var user = Class.create({
+        init: function (url) {
+            this.url = url + '/users'
         },
-        login: function (user, success, error) {
-            var url = this.rootUrl /*+ "login"*/;
+        register: function (username, nickname, password, error) {
             var userData = {
-                username: user.username,
-                authCode: CryptoJS.MD5(user.username + user.password).toString()
+                "username": username,
+                "nickname": nickname,
+                "authCode": CryptoJS.SHA1(password).toString()
             };
 
-            httpRequester.postJSON(url, userData,
-				function (data) {
-				    saveUserData(data);
-				    success(data);
-				}, error);
+            var url = this.url + '/register/' + username + '/' + userData.authCode;
+
+            httpRequester.getJson(url,
+                function (data) {
+                    localStorage.setItem('authCode', data.SessionKey);
+                    localStorage.setItem('userNickname', data.Name);
+                    localStorage.setItem('userId', data.Id);
+                },
+                error);
         },
-        register: function (user, success, error) {
-            var url = this.rootUrl /*+ "register"*/;
+        login: function (username, password, error) {
             var userData = {
-                username: user.username,
-                nickname: user.nickname,
-                authCode: CryptoJS.MD5(user.username + user.password).toString()
+                "username": username,
+                "authCode": CryptoJS.SHA1(password).toString()
             };
-            httpRequester.postJSON(url, userData,
-				function (data) {
-				    saveUserData(data);
-				    success(data);
-				}, error);
+            var url = this.url + '/login/' + username + '/' + userData.authCode;
+
+            httpRequester.getJson(url,
+                function (data) {
+                    localStorage.setItem('authCode', data.SessionKey);
+                    localStorage.setItem('userNickname', data.Name);
+                    localStorage.setItem('userId', data.Id);
+                },
+                error);
         },
-        logout: function (success, error) {
-            var url = this.rootUrl + "logout/" + sessionKey;
-            httpRequester.getJSON(url, function (data) {
-                clearUserData();
-                success(data);
-            }, error)
+        logout: function () {
+            var url = this.url + '/logout/';
+
+            if (true) {
+                url = url + localStorage.getItem('authCode');
+            }
+
+            httpRequester.getJson(url,
+                function () {
+                    localStorage.setItem('authCode', '');
+                    localStorage.setItem('userNickname', '');
+                    localStorage.setItem('userId', '');
+                },
+                function () { console.log('Try again') });
         },
-        scores: function (success, error) {
+        all: function (success) {
+            var url = this.url;
+
+            httpRequester.getJson(url,
+                success,
+                function () { console.log('Try again') });
         }
     });
-   
-    //var ChatsPersister = Class.create({
-    //    init: function (url) {
-    //        this.rootUrl = url + "messages/";
-    //    },
-    //    unread: function (success, error) {
-    //        var url = this.rootUrl + "unread/" + sessionKey;
-    //        httpRequester.getJSON(url, success, error);
-    //    },
-    //    all: function (success, error) {
-    //        var url = this.rootUrl + "all/" + sessionKey;
-    //        httpRequester.getJSON(url, success, error);
-    //    }
-    //});
+
+    var chat = Class.create({
+        init: function () {
+            this.url = mainUrl + '/chats'
+        },
+        create: function (id, success, error) {
+            var url = this.url + '/new/' + id + '/' + localStorage.getItem('authCode');
+
+            httpRequester.getJson(url, success, error);
+        },
+        sendMessage: function (id, content, success, error) {
+            var userModel = { Id: id };
+            var message = { Owner: userModel, Content: content };
+
+            var url = this.url + '/senMessage/' + id + '/' + localStorage.getItem('authCode');
+
+            httpRequester.postJson(url, null, success, error);
+        },
+        all: function (success, error) {
+            var url = this.url + '/' + localStorage.getItem('authCode');
+
+            httpRequester.getJson(url, success, error);
+        }
+    });
+
+    var messages = Class.create({
+        init: function () {
+            this.url = mainUrl + '/messages';
+        },
+        all: function (chatId, success, error) {
+            var url = this.url + '/' + chatId + '/' + localStorage.getItem('authCode');
+
+            httpRequester.getJson(url, success, function (err) { console.log(err); });
+        }
+    });
+
     return {
-        get: function (url) {
-            return new MainPersister(url);
-        }
-    };
+        mainPersister: function (url) { return new mainPersister(url) },
+        nickname:  localStorage.getItem('userNickname'),
+        authCode: localStorage.getItem('authCode')
+    }
 }());
