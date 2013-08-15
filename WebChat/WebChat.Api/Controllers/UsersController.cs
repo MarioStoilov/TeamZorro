@@ -11,7 +11,7 @@ using WebChat.Repositories.SerializableModels;
 
 namespace WebChat.Api.Controllers
 {
-    [RoutePrefix("api/users")]
+    [AttributeRouting.RoutePrefix("api/users")]
     public class UsersController : ApiController
     {
         private IRepositoryUsers<UserModel> userRepository;
