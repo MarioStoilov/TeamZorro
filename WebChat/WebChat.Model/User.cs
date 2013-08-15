@@ -18,6 +18,7 @@ namespace WebChat.Model
         {
             this.Chats = new HashSet<Chat>();
             this.Chats1 = new HashSet<Chat>();
+            this.Messages = new HashSet<Message>();
         }
     
         public int Id { get; set; }
@@ -27,5 +28,6 @@ namespace WebChat.Model
     
         public virtual ICollection<Chat> Chats { get; set; }
         public virtual ICollection<Chat> Chats1 { get; set; }
+        public virtual ICollection<Message> Messages { get; set; }
     }
 }

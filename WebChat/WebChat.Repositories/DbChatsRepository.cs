@@ -14,6 +14,7 @@ namespace WebChat.Repositories
         private DbContext dbContext;
         private DbSet<User> userSet;
         private DbSet<Chat> chatSet;
+        private DbSet<Message> messageSet;
 
         public DbChatsRepository(DbContext dbContext)
         {
@@ -25,109 +26,151 @@ namespace WebChat.Repositories
             this.dbContext = dbContext;
             this.userSet = this.dbContext.Set<User>();
             this.chatSet = this.dbContext.Set<Chat>();
+            this.messageSet = this.dbContext.Set<Message>();
         }
 
 
 
-        public ChatModel Add(ChatModel entity)
+
+
+        public ChatModel New(int id, string sessionKey)
         {
-            User firstUser = (from user in this.userSet
-                              where user.Name.ToLower() == entity.User1.Name.ToLower()
-                              select user).FirstOrDefault();
+            User userById = (from user in this.userSet
+                             where id == user.Id
+                             select user).FirstOrDefault();
 
-            if (firstUser==null)
+            if (userById==null)
             {
-                throw new ArgumentException("First user does not exist");
+                throw new ArgumentException(String.Format("User with id {0} does not exist", id));
             }
 
-            User secondUser = (from user in this.userSet
-                              where user.Name.ToLower() == entity.User2.Name.ToLower()
-                              select user).FirstOrDefault();
+            User userByKey = (from user in this.userSet
+                              where sessionKey == user.SessionKey
+                             select user).FirstOrDefault();
 
-            if (secondUser == null)
+            if (userByKey == null)
             {
-                throw new ArgumentException("Second user does not exist");
+                throw new ArgumentException("Invalid sessionKey");
             }
 
-
-            Chat newChat = new Chat() { Channel=entity.Channel};//, User1=firstUser, User2=secondUser };
-            if (firstUser.Id<secondUser.Id)
+            //TODO: Get channel
+            Chat newChat = new Chat();
+            if (userById.Id<userByKey.Id)
             {
-                newChat.User1 = firstUser;
-                newChat.User2 = secondUser;
+                newChat.User1 = userById;
+                newChat.User2 = userByKey;
             }
-            else if (firstUser.Id>secondUser.Id)
+            else if (userById.Id > userByKey.Id)
             {
-                newChat.User2 = firstUser;
-                newChat.User1 = secondUser;
+                newChat.User2 = userById;
+                newChat.User1 = userByKey;
             }
             else
             {
                 throw new ArgumentException("Cannot chat with yourself");
             }
 
-            if (this.chatSet.Any(c => c.User1.Id==firstUser.Id && c.User2.Id==secondUser.Id))
-            {
-                throw new ArgumentException("Chat already exists");
-            }
 
             this.chatSet.Add(newChat);
             this.dbContext.SaveChanges();
-
-            return new ChatModel() { Channel = newChat.Channel, 
-                User1 = new UserModel() { Id = firstUser.Id, Name = firstUser.Name }, 
-                User2 = new UserModel() { Id = secondUser.Id, Name = secondUser.Name } 
-            };
-        }
-
-
-        public void Delete(int id1, int id2)
-        {
-            Chat chatToDelete = (from chat in this.chatSet.Include("User1").Include("User2")
-                                 where (chat.User1.Id == id1 && chat.User2.Id == id2)
-                                         || (chat.User1.Id == id2 && chat.User2.Id == id1)
-                                 select chat).FirstOrDefault();
-
-            if (chatToDelete==null)
-            {
-                throw new ArgumentException("Chat does not exist");
-            }
-
-            this.chatSet.Remove(chatToDelete);
+            newChat.Channel = newChat.Id.ToString() +"-"+ newChat.User1.Id.ToString()+"-" + newChat.User2.Id.ToString();
             this.dbContext.SaveChanges();
-        }
-
-        public ChatModel Get(int id1, int id2)
-        {
-            Chat result = (from chat in this.chatSet.Include("User1").Include("User2")
-                                 where (chat.User1.Id == id1 && chat.User2.Id == id2)
-                                         || (chat.User1.Id == id2 && chat.User2.Id == id1)
-                                 select chat).FirstOrDefault();
 
             return new ChatModel()
             {
-                User1 = new UserModel() { Id = result.User1.Id, Name = result.User1.Name },
-                User2 = new UserModel() { Id = result.User2.Id, Name = result.User2.Name },
-                Channel = result.Channel
+                Id = newChat.Id,
+                Channel = newChat.Channel,
+                User1 = new UserModel() { Id = newChat.User1.Id, Name = newChat.User1.Name },
+                User2 = new UserModel() { Id = newChat.User2.Id, Name = newChat.User2.Name }
             };
         }
 
-        public IQueryable<ChatModel> All()
+        public ChatModel Get(int id, string sessionKey)
         {
+            User userById = (from user in this.userSet
+                             where id == user.Id
+                             select user).FirstOrDefault();
+
+            if (userById == null)
+            {
+                throw new ArgumentException(String.Format("User with id {0} does not exist", id));
+            }
+
+            User userByKey = (from user in this.userSet
+                              where sessionKey == user.SessionKey
+                              select user).FirstOrDefault();
+
+            if (userByKey == null)
+            {
+                throw new ArgumentException("Invalid sessionKey");
+            }
+
+            Chat result = (from chat in this.chatSet.Include("User1").Include("User2")
+                           where (chat.User1.Id == userById.Id && chat.User2.Id == userByKey.Id)
+                           || (chat.User1.Id == userByKey.Id && chat.User2.Id == userById.Id)
+                           select chat).FirstOrDefault();
+
+            if (result==null)
+            {
+                throw new ArgumentException("No chat started");
+            }
+
+            return new ChatModel()
+            {
+                Id = result.Id,
+                Channel = result.Channel,
+                User1 = new UserModel() { Id = result.User1.Id, Name = result.User1.Name },
+                User2 = new UserModel() { Id = result.User2.Id, Name = result.User2.Name }
+            };
+            
+        }
+
+        public IQueryable<ChatModel> All(string sessionKey)
+        {
+            User userByKey = (from user in this.userSet
+                              where sessionKey == user.SessionKey
+                              select user).FirstOrDefault();
+
+            if (userByKey == null)
+            {
+                throw new ArgumentException("Invalid sessionKey");
+            }
+
             var result = from chat in this.chatSet.Include("User1").Include("User2")
+                         where chat.User1.SessionKey==sessionKey || chat.User2.SessionKey==sessionKey
                          select new ChatModel()
                          {
+                             Id = chat.Id,
+                             Channel = chat.Channel,
                              User1 = new UserModel() { Id = chat.User1.Id, Name = chat.User1.Name },
-                             User2 = new UserModel() { Id = chat.User2.Id, Name = chat.User2.Name },
-                             Channel= chat.Channel
+                             User2 = new UserModel() { Id = chat.User2.Id, Name = chat.User2.Name }
                          };
 
             return result;
         }
 
-        public IQueryable<ChatModel> Find(System.Linq.Expressions.Expression<Func<ChatModel, bool>> predicate)
+
+        public void SendMessage(int id, string sessionKey, string content)
         {
-            return this.All().Where(predicate);
+
+            User userByKey = (from user in this.userSet
+                              where sessionKey == user.SessionKey
+                              select user).FirstOrDefault();
+
+            if (userByKey == null)
+            {
+                throw new ArgumentException("Invalid sessionKey");
+            }
+
+            ChatModel currentChat = this.Get(id, sessionKey);
+
+            if (currentChat==null)
+            {
+                throw new ArgumentException("Chat does not exist. Please start a chat with this user");
+            }
+
+            this.messageSet.Add(new Message() { ChatID=currentChat.Id, MessageContent=content, OwnerId=userByKey.Id});
+            this.dbContext.SaveChanges();
         }
     }
 }

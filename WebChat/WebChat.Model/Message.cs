@@ -17,7 +17,9 @@ namespace WebChat.Model
         public int Id { get; set; }
         public int ChatID { get; set; }
         public string MessageContent { get; set; }
+        public int OwnerId { get; set; }
     
         public virtual Chat Chat { get; set; }
+        public virtual User User { get; set; }
     }
 }

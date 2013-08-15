@@ -9,10 +9,9 @@ namespace WebChat.Repositories
 {
     public interface IRepositoryChats<T>
     {
-        T Add(T entity);
-        void Delete(int id1, int id2);
-        T Get(int id1, int id2);
-        IQueryable<T> All();
-        IQueryable<T> Find(Expression<Func<T, bool>> predicate);
+        T New(int id, string sessionKey);
+        T Get(int id, string sessionKey);
+        void SendMessage(int id, string sessionKey, string content);
+        IQueryable<T> All(string sessionKey);
     }
 }

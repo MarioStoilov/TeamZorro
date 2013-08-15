@@ -1,4 +1,6 @@
-﻿using System;
+﻿using AttributeRouting;
+using AttributeRouting.Web.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -9,6 +11,7 @@ using WebChat.Repositories.SerializableModels;
 
 namespace WebChat.Api.Controllers
 {
+    [RoutePrefix("api/chats")]
     public class ChatsController : ApiController
     {
         private IRepositoryChats<ChatModel> chatRepository;
@@ -18,44 +21,26 @@ namespace WebChat.Api.Controllers
             this.chatRepository = chatsRepository;
         }
 
-        [HttpGet]
-        public IEnumerable<ChatModel> Get([FromUri] int[] ids)
+        [GET("{sessionkey}")]
+        public IEnumerable<ChatModel> Get(string sessionkey)
         {
-            if (ids.Length==0)
-            {
-                return this.chatRepository.All().ToList();
-            }
-            else if (ids.Length == 2)
-            {
-                List<ChatModel> list = new List<ChatModel>();
-                list.Add(this.chatRepository.Get(ids[0], ids[1]));
-                return list;
-            }
-            else
-            {
-                throw new ArgumentException("Invalid arguments provided");
-            }
-            
+
+            return this.chatRepository.All(sessionkey).ToList();
         }
 
 
-        // POST api/chats
-        public ChatModel Post([FromBody]ChatModel value)
+        [GET("new/{id}/{sessionkey}")]
+        public ChatModel Get(int id, string sessionKey)
         {
-            //TODO: get channel from pubnub
-            return this.chatRepository.Add(value);
+            return this.chatRepository.New(id, sessionKey);
         }
 
-
-        // DELETE api/chats/5
-        [HttpDelete]
-        public HttpResponseMessage Delete([FromUri] int[] ids)
+        [POST("senMessage/{id}/{sessionkey}")]
+        public void Post([FromBody]SerializableMessage value, int id, string sessionkey)
         {
-            this.chatRepository.Delete(ids[0], ids[1]);
-
-            var response = Request.CreateResponse(HttpStatusCode.OK);
-
-            return response;
+            this.chatRepository.SendMessage(id, sessionkey, value.Content);
         }
+
+        
     }
 }

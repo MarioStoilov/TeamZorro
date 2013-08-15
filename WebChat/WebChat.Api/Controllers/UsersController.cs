@@ -1,4 +1,6 @@
-﻿using System;
+﻿using AttributeRouting;
+using AttributeRouting.Web.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -9,6 +11,7 @@ using WebChat.Repositories.SerializableModels;
 
 namespace WebChat.Api.Controllers
 {
+    [RoutePrefix("api/users")]
     public class UsersController : ApiController
     {
         private IRepositoryUsers<UserModel> userRepository;
@@ -30,38 +33,61 @@ namespace WebChat.Api.Controllers
             return this.userRepository.Get(id);
         }
 
-        // POST api/values
-        public HttpResponseMessage Post([FromBody]UserModel value)
+        [POST("register/{username}/{password}")]
+        public UserModel Post(string username, string password)
         {
-            var addedUser = this.userRepository.Add(value);
 
-            var response = Request.CreateResponse<UserModel>(HttpStatusCode.OK, addedUser);
-            var resourceLink = Url.Link("DefaultApi", new { id = addedUser.Id });
-
-            response.Headers.Location = new Uri(resourceLink);
-            return response;
+            return this.userRepository.Add(new UserModel() { Name = username, PassWord = password });
         }
+
+        [GET("login/{username}/{password}")]
+        public UserModel Get(string username, string password)
+        {
+
+            return this.userRepository.Get(username, password);
+        }
+
+        [GET("logout/{sessionkey}")]
+        public void Get(string sessionkey)
+        {
+
+            this.userRepository.Logout(sessionkey);
+        }
+
+
+
+        //// POST api/values
+        //public HttpResponseMessage Post([FromBody]UserModel value)
+        //{
+        //    var addedUser = this.userRepository.Add(value);
+
+        //    var response = Request.CreateResponse<UserModel>(HttpStatusCode.OK, addedUser);
+        //    var resourceLink = Url.Link("DefaultApi", new { id = addedUser.Id });
+
+        //    response.Headers.Location = new Uri(resourceLink);
+        //    return response;
+        //}
 
         // PUT api/values/5
-        public HttpResponseMessage Put(int id, [FromBody]UserModel value)
-        {
-            var addedUser = this.userRepository.Update(id, value);
+        //public HttpResponseMessage Put(int id, [FromBody]UserModel value)
+        //{
+        //    var addedUser = this.userRepository.Update(id, value);
 
-            var response = Request.CreateResponse<UserModel>(HttpStatusCode.OK, addedUser);
-            var resourceLink = Url.Link("DefaultApi", new { id = addedUser.Id });
+        //    var response = Request.CreateResponse<UserModel>(HttpStatusCode.OK, addedUser);
+        //    var resourceLink = Url.Link("DefaultApi", new { id = addedUser.Id });
 
-            response.Headers.Location = new Uri(resourceLink);
-            return response;
-        }
+        //    response.Headers.Location = new Uri(resourceLink);
+        //    return response;
+        //}
 
         // DELETE api/values/5
-        public HttpResponseMessage Delete(int id)
-        {
-            this.userRepository.Delete(id);
+        //public HttpResponseMessage Delete(int id)
+        //{
+        //    this.userRepository.Delete(id);
 
-            var response = Request.CreateResponse(HttpStatusCode.OK);
+        //    var response = Request.CreateResponse(HttpStatusCode.OK);
 
-            return response;
-        }
+        //    return response;
+        //}
     }
 }

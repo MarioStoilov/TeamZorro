@@ -8,6 +8,8 @@ namespace WebChat.Repositories.SerializableModels
 {
     public class ChatModel
     {
+        public int Id { get; set; }
+
         public string Channel { get; set; }
 
         public UserModel User1 { get; set; }

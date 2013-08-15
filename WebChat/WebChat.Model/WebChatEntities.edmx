@@ -22,6 +22,10 @@
             <End Role="Chats" EntitySet="Chats" />
             <End Role="Messages" EntitySet="Messages" />
           </AssociationSet>
+          <AssociationSet Name="FK_Messages_Users" Association="WebChatModel.Store.FK_Messages_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Messages" EntitySet="Messages" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Chats">
           <Key>
@@ -30,13 +34,14 @@
           <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="FirstUserId" Type="int" Nullable="false" />
           <Property Name="SecondUseeId" Type="int" Nullable="false" />
-          <Property Name="Channel" Type="nvarchar" Nullable="false" MaxLength="200" />
+          <Property Name="Channel" Type="nvarchar" MaxLength="200" />
         </EntityType>
         <EntityType Name="Messages">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="OwnerId" Type="int" Nullable="false" />
           <Property Name="ChatID" Type="int" Nullable="false" />
           <Property Name="MessageContent" Type="nvarchar" Nullable="false" MaxLength="50" />
         </EntityType>
@@ -92,6 +97,18 @@
             </Principal>
             <Dependent Role="Messages">
               <PropertyRef Name="ChatID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Messages_Users">
+          <End Role="Users" Type="WebChatModel.Store.Users" Multiplicity="1" />
+          <End Role="Messages" Type="WebChatModel.Store.Messages" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Messages">
+              <PropertyRef Name="OwnerId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -177,6 +194,10 @@
             <End Role="Chat" EntitySet="Chats" />
             <End Role="Message" EntitySet="Messages" />
           </AssociationSet>
+          <AssociationSet Name="FK_Messages_Users" Association="WebChatModel.FK_Messages_Users">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Message" EntitySet="Messages" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="sysdiagram">
           <Key>
@@ -198,6 +219,7 @@
           <Property Type="String" Name="SessionKey" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Chats" Relationship="WebChatModel.FK_Chats_Users" FromRole="User" ToRole="Chat" />
           <NavigationProperty Name="Chats1" Relationship="WebChatModel.FK_Chats_Users1" FromRole="User" ToRole="Chat" />
+          <NavigationProperty Name="Messages" Relationship="WebChatModel.FK_Messages_Users" FromRole="User" ToRole="Message" />
         </EntityType>
         <ComplexType Name="sp_helpdiagramdefinition_Result">
           <Property Type="Int32" Name="version" Nullable="true" />
@@ -218,6 +240,8 @@
           <Property Type="Int32" Name="ChatID" Nullable="false" />
           <Property Type="String" Name="MessageContent" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Chat" Relationship="WebChatModel.FK_Messages_Chats" FromRole="Message" ToRole="Chat" />
+          <Property Type="Int32" Name="OwnerId" Nullable="false" />
+          <NavigationProperty Name="User" Relationship="WebChatModel.FK_Messages_Users" FromRole="Message" ToRole="User" />
         </EntityType>
         <EntityType Name="Chat">
           <Key>
@@ -226,7 +250,7 @@
           <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Type="Int32" Name="FirstUserId" Nullable="false" />
           <Property Type="Int32" Name="SecondUseeId" Nullable="false" />
-          <Property Type="String" Name="Channel" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Channel" MaxLength="200" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="User1" Relationship="WebChatModel.FK_Chats_Users" FromRole="Chat" ToRole="User" />
           <NavigationProperty Name="User2" Relationship="WebChatModel.FK_Chats_Users1" FromRole="Chat" ToRole="User" />
           <NavigationProperty Name="Messages" Relationship="WebChatModel.FK_Messages_Chats" FromRole="Chat" ToRole="Message" />
@@ -264,6 +288,18 @@
             </Principal>
             <Dependent Role="Message">
               <PropertyRef Name="ChatID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Messages_Users">
+          <End Type="WebChatModel.User" Role="User" Multiplicity="1" />
+          <End Type="WebChatModel.Message" Role="Message" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Message">
+              <PropertyRef Name="OwnerId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -321,6 +357,7 @@
           <EntitySetMapping Name="Messages">
             <EntityTypeMapping TypeName="WebChatModel.Message">
               <MappingFragment StoreEntitySet="Messages">
+                <ScalarProperty Name="OwnerId" ColumnName="OwnerId" />
                 <ScalarProperty Name="MessageContent" ColumnName="MessageContent" />
                 <ScalarProperty Name="ChatID" ColumnName="ChatID" />
                 <ScalarProperty Name="Id" ColumnName="Id" />

@@ -13,5 +13,7 @@ namespace WebChat.Repositories.SerializableModels
         public string Name { get; set; }
 
         public string PassWord { get; set; }
+
+        public string SessionKey { get; set; }
     }
 }

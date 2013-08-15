@@ -13,6 +13,8 @@ namespace WebChat.Repositories
         T Update(int id, T entity);
         void Delete(int id);
         T Get(int id);
+        T Get(string username, string password);
+        void Logout(string sessionKey);
         IQueryable<T> All();
         IQueryable<T> Find(Expression<Func<T, bool>> predicate);
     }
