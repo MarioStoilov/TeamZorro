@@ -35,7 +35,7 @@ var ui = (function () {
                     '<p id="greetings">Hello, ' + localStorage.getItem('userNickname') + '</p>' +
                     '<p>Let\'s play ...</p>' +
                     '<button id="button-logout">Log out</button>' +
-                    '<button id="button-create-new-game">Create new game</button>' +
+                    '<button id="button-create-new-chat">Create new chat</button>' +
                 '</div>';
     }
 
@@ -87,52 +87,43 @@ var ui = (function () {
         return false;
     }
 
-    function drawListOfGames(myActiveChats, container, conatinerTitle, type) {
+    function drawListOfChats(myActiveChats, container, conatinerTitle, type) {
         $(container)
             .append($('<h2 />').attr('id', 'games-' + type).text(conatinerTitle))
             .append($('<ul />').attr({ 'id': 'games-' + type + '-list', 'class': 'show' }));
 
         var elementsContainer = $(container + ' #' + 'games-' + type + '-list');
 
+        var currentUser = localStorage.getItem('userId');
+
         for (var i = 0; i < myActiveChats.length; i++) {
-            var currentLi = $('<li />').attr('data-game-id', myActiveChats[i].id)
-                .append($('<a />').attr('href', '#').text(myActiveChats[i].title))
-                .append($('<span />').text('by ' + myActiveChats[i].creator));
+            var otherUser;
 
-            if (type == 'open') {
-                currentLi.append($('<button />').text('Join').addClass('button-join'));
+            if (myActiveChats[i].User1.Id != currentUser) {
+                otherUser = myActiveChats[i].User1.Name;
             }
-
-            if (myActiveChats[i].status === 'in-progress') {
-                currentLi.append($('<button />').addClass('button-view-state').text('Game state'));
+            else {
+                otherUser = myActiveChats[i].User2.Name;
             }
 
-            if (myActiveChats[i].status === 'full' && localStorage.getItem('userNickname') == myActiveChats[i].creator) {
-                currentLi.append($('<button />').text('Start').addClass('button-start'));
-            }
-            else if (myActiveChats[i].status === 'full') {
-                currentLi.append($('<p />').text('Waiting for ' + myActiveChats[i].creator + ' response.'));
-            }
 
-            if (myActiveChats[i].status === 'open' && localStorage.getItem('userNickname') != myActiveChats[i].creator) {
-                currentLi.append($('<button />').text('Join').addClass('button-join'));
-            }
+            var currentLi = $('<li />').attr({ 'data-chat-id': myActiveChats[i].Id, 'data-chat-channel': myActiveChats[i].Channel })
+                .append($('<span />').text(otherUser));
 
             elementsContainer.append(currentLi);
         }
     }
 
-    function drawListOfMessages(messages, container, conatinerTitle, type) {
+    function drawListOfUsers(users, container, conatinerTitle, type) {
         $(container)
-            .append($('<h2 />').attr('id', 'games-' + type).text(conatinerTitle))
-            .append($('<ul />').attr({ 'id': 'games-' + type + '-list', 'class': 'show' }));
+            .append($('<h2 />').attr('id', 'users-' + type).text(conatinerTitle))
+            .append($('<ul />').attr({ 'id': 'users-' + type + '-list', 'class': 'show' }));
 
-        var elementsContainer = $(container + ' #' + 'games-' + type + '-list');
+        var elementsContainer = $(container + ' #' + 'users-' + type + '-list');
 
-        for (var i = 0; i < messages.length; i++) {
+        for (var i = 0; i < users.length; i++) {
             elementsContainer
-                .append($('<li />').attr('data-game-id', messages[i].gameId).append($('<a />').attr('href', '#').text(messages[i].text))
-                .append($('<span />').text('state ' + messages[i].state)));
+                .append($('<li />').attr('data-user-id', users[i].Id).append($('<a />').attr('href', '#').text(users[i].Name)));
         }
     }
 
@@ -159,16 +150,16 @@ var ui = (function () {
     function drawSidebars(persister) {
         $('#left-side-bar').empty();
         $('#right-side-bar').empty();
-        persister.game.myActive(function (data) {
-            drawListOfGames(data, '#left-side-bar', 'My active games', 'active');
+        persister.chat.all(function (data) {
+            drawListOfChats(data, '#left-side-bar', 'My active chats', 'active');
         });
 
-        persister.game.open(function (data) {
-            drawListOfGames(data, '#left-side-bar', 'Open games', 'open');
-        });
+        //persister.chat.open(function (data) {
+        //    drawListOfChats(data, '#left-side-bar', 'Open games', 'open');
+        //});
 
-        persister.messages.all(function (data) {
-            drawListOfMessages(data, '#right-side-bar', 'Messages', 'messages');
+        persister.user.all(function (data) {
+            drawListOfUsers(data, '#right-side-bar', 'Users', 'user');
         });
     }
 
@@ -234,8 +225,8 @@ var ui = (function () {
         showErrorMessage: showErrorMessage,
         showMessage: showMessage,
         clearErrorMessage: clearErrorMessage,
-        drawListOfGames: drawListOfGames,
-        drawListOfMessages: drawListOfMessages,
+        drawListOfChats: drawListOfChats,
+        drawListOfUsers: drawListOfUsers,
         drawCreateGameMenu: drawCreateGameMenu,
         drawJoinGameMenu: drawJoinGameMenu,
         drawSidebars: drawSidebars,
