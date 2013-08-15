@@ -5,7 +5,7 @@
 /// <reference path="ui.js" />
 
 $(document).ready(function () {
-    var myMainPersister = persister.mainPersister('http://localhost:47655/api');//47655
+    var myMainPersister = persister.mainPersister('http://zorrochat.apphb.com/api');//47655
 
     // Check is user logged in
     if (localStorage.getItem('authCode') == '' || localStorage.getItem('authCode') == null || localStorage.getItem('authCode') == undefined) {
@@ -80,16 +80,18 @@ $(document).ready(function () {
 
                 if (isUsernameValid && isPasswordValid && isPasswordsEqual) {
                     persister.user.register(username, nickname, password, ui.showErrorMessage);
+                    setTimeout(function () {
                     $('#login-container').html(ui.drawLoggedIn());
                     ui.clearErrorMessage();
+                    }, 500);
                 }
                 else {
-                    ui.showAppErrorMessage('Invalid username or password! Check you account information and try again.');
+                    ui.showAppErrorMessage('Invalid username or password! Check your account information and try again.');
                 }
             });
 
             // Create new game
-            $('#wrapper').on('click', '#user-loged-in #button-create-new-game', function () {
+            $('#wrapper').on('click', '#user-loged-in #button-create-new-chat', function () {
                 $('#user-loged-in').html(ui.drawCreateGameMenu());
             });
 
