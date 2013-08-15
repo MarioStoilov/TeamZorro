@@ -8,13 +8,18 @@
     <script src="Scripts/persister.js"></script>
     <script src="Scripts/controller.js"></script>
     <script src="Scripts/ui.js"></script>
+    <script src="Scripts/validation-controler.js"></script>
     <script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/sha1.js"></script>
     <script type="text/javascript" src="http://bp.yahooapis.com/2.4.21/browserplus-min.js"></script>
     <link href="Styles/common.css" rel="stylesheet" />
     <link href="Styles/login.css" rel="stylesheet" />
     <link href="Styles/register.css" rel="stylesheet" />
     <link href="Styles/user-logged-in.css" rel="stylesheet" />
-    <link href="Site.css" rel="stylesheet" />
+    <link href="Styles/Site.css" rel="stylesheet" />
+    <link href="http://blueimp.github.io/cdn/css/bootstrap.min.css" rel="stylesheet">
+    <link href="Styles/style.css" rel="stylesheet">
+    <link href="http://blueimp.github.io/cdn/css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link href="Styles/jquery.fileupload-ui.css" rel="stylesheet">
 </head>
 <body>
     <div id="wrapper">
@@ -31,5 +36,29 @@
         <div id="right-side-bar">
         </div>
     </div>
+  <!--  <script>
+
+        $(function () {
+            'use strict';
+            // Change this to the location of your server-side upload handler:
+            var url = 'http://localhost:47655/api/files/';
+            $('#fileupload').fileupload({
+                url: url,
+                dataType: 'json',
+                done: function (e, data) {
+                    alert("Image successfully.");
+                },
+                progressall: function (e, data) {
+                    $("#progress").show();
+                    var progress = parseInt(data.loaded / data.total * 100, 10);
+                    $('#progress .bar').css(
+                        'width',
+                        progress + '%'
+                    );
+                }
+            }).prop('disabled', !$.support.fileInput)
+                .parent().addClass($.support.fileInput ? undefined : 'disabled');
+        });
+    </script>-->
 </body>
 </html>

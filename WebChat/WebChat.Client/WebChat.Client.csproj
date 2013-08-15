@@ -73,6 +73,7 @@
     <Content Include="Styles\common.css" />
     <Content Include="Styles\login.css" />
     <Content Include="Styles\register.css" />
+    <Content Include="Styles\Site.css" />
     <Content Include="Styles\user-logged-in.css" />
     <Content Include="Web.config" />
     <Content Include="Scripts\jquery-2.0.3.min.map" />

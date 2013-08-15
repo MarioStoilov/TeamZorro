@@ -45,7 +45,7 @@ namespace WebChat.Api.Controllers
 
 
             var sharedUrl = dropbox.GetMediaLinkAsync(uploadFileEntry.Path).Result;
-            return (sharedUrl.Url + "?dl=1"); // we can download the file directly
+            return (sharedUrl.Url); // we can download the file directly
         }
 
 
@@ -78,8 +78,10 @@ namespace WebChat.Api.Controllers
                     var filePath = HttpContext.Current.Server.MapPath("~/App_Data/" + uploader.Id+extension);
                     postedFile.SaveAs(filePath);
 
-
-                    docfiles.Add(DropboxShareFile(filePath, uploader.Id.ToString()+extension));
+                    string avatrURL = DropboxShareFile(filePath, uploader.Id.ToString() + extension);
+                    docfiles.Add(avatrURL);
+                    uploader.AvatarURL = avatrURL;
+                    webChatContext.SaveChanges();
 
                     File.Delete(filePath);
                 }

@@ -107,7 +107,7 @@ namespace WebChat.Repositories
         public IQueryable<UserModel> All()
         {
             var result = from user in this.userSet
-                         select new UserModel() { Id = user.Id, Name = user.Name };
+                         select new UserModel() { Id = user.Id, Name = user.Name, AvatarURL=user.AvatarURL };
 
             return result;
         }
