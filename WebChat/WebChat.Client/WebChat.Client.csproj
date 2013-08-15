@@ -70,7 +70,6 @@
     <Content Include="Scripts\persister.js" />
     <Content Include="Scripts\ui.js" />
     <Content Include="Scripts\validation-controler.js" />
-    <Content Include="Site.css" />
     <Content Include="Styles\common.css" />
     <Content Include="Styles\login.css" />
     <Content Include="Styles\register.css" />
