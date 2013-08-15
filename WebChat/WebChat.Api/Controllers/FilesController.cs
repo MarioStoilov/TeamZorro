@@ -1,5 +1,4 @@
-﻿using Spring.Http;
-using Spring.IO;
+﻿using Spring.IO;
 using Spring.Social.Dropbox.Api;
 using Spring.Social.Dropbox.Connect;
 using System;
@@ -8,19 +7,20 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Http;
+using System.Net.Http;
 using System.Web.Mvc;
 using WebChat.Repositories.SerializableModels;
 
 namespace WebChat.Api.Controllers
 {
-    public class DropboxController : ApiController
+    public class FilesController : ApiController
     {
-        private DropBox appAuth = new DropBox { Value = "5hq4n8kjyopqzje", Secret = "22h4xl0x1g569af" };
+        private DropBox appAuth = new DropBox { Value = "rylhmyfwhpfr1q4", Secret = "udw34fp6pj315j4" };
         private DropBox userAuth = new DropBox { Value = "higmkxi48pfhv8jt", Secret = "0wouwudro53wmkz" };
         //private IRepository<Dropbox> data;
 
 
-        public DropboxController()
+        public FilesController()
         {
             //this.data = new DropBoxRepository(
             //    ConfigurationManager.AppSettings["MongoConnectionString"]);
@@ -43,7 +43,7 @@ namespace WebChat.Api.Controllers
         }
 
 
-        //[HttpPost]
+        [System.Web.Http.HttpPost]
         public HttpResponseMessage Post()
         {
             HttpResponseMessage result = null;
@@ -60,11 +60,11 @@ namespace WebChat.Api.Controllers
 
                     docfiles.Add(DropboxShareFile(filePath, postedFile.FileName));
                 }
-                //result = Request.CreateResponse(HttpStatusCode.Created, docfiles);
+                result = Request.CreateResponse(HttpStatusCode.Created, docfiles);
             }
             else
             {
-                //result = Request.CreateResponse(HttpStatusCode.BadRequest);
+                result = Request.CreateResponse(HttpStatusCode.BadRequest);
             }
             return result;
         }
