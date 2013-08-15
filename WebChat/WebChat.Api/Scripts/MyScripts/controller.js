@@ -116,12 +116,10 @@ $(document).ready(function () {
                 });
 
                 // SEND
-                function publish(channel, messageText) {
-                    pubnub.publish({
-                        channel: channelID,
-                        message: messageText
-                    })
-                }
+                pubnub.publish({
+                    channel: channelID,
+                    message: localStorage.getItem('userNickname') + ': ' + messageText
+                });
 
                 $('#message-text').val('');
             });
