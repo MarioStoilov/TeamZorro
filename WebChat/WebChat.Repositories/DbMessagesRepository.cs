@@ -47,7 +47,7 @@ namespace WebChat.Repositories
 
             if (chatById == null)
             {
-                throw new ArgumentException("Invalid sessionKey");
+                throw new ArgumentException("Invalid chat id");
             }
 
             var messages = (from m in this.messageSet

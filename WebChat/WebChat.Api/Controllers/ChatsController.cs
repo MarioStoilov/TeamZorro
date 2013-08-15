@@ -39,7 +39,5 @@ namespace WebChat.Api.Controllers
         {
             this.chatRepository.SendMessage(id, sessionkey, value.Content);
         }
-
-        
     }
 }
