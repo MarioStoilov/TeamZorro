@@ -33,15 +33,40 @@ var ui = (function () {
     function drawLoggedInForm() {
         return '<div id="user-loged-in">' +
                     '<p id="greetings">Hello, ' + localStorage.getItem('userNickname') + '</p>' +
+                    drawImageOrAskForUpload() +
                     '<p>Let\'s chat ...</p>' +
                     '<button id="button-logout">Log out</button>' +
                 '</div>';
+    }
+
+    function drawImageOrAskForUpload() {
+        var avatarUrl = localStorage.getItem('avatarURL');
+
+        if (!avatarUrl || !avatarUrl == '') {
+            return drawUploadAvatarForm();
+        }
+        else {
+            return '<img id="avatar" width="80" src="' + avatarUrl + '" alt="avatar"/>';
+        }
     }
 
     function drawUserInteraction() {
         return '<div id="error-messages"></div>' +
                '<div id="messages"></div>' +
                '<div id="current-chat-container"></div>';
+    }
+
+    function drawUploadAvatarForm() {
+        return '<span class="btn btn-success fileinput-button">' +
+            '<i class="icon-plus icon-white"></i>' +
+            '<span>Upload image...</span>' +
+            '<input id="fileupload" type="file" accept="image/*">' +
+        '</span>' +
+        '<br>' +
+        '<br>' +
+        '<div style="display:none" id="progress" class="progress progress-success progress-striped">' +
+            '<div class="bar"></div>' +
+        '</div>';
     }
 
     function showAppErrorMessage(message) {

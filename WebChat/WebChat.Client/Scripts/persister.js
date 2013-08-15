@@ -42,11 +42,13 @@ var persister = (function () {
                 },
                 error);
         },
+
         login: function (username, password, error) {
             var userData = {
                 "username": username,
-                "authCode": CryptoJS.SHA1(password).toString()
+                "authCode": CryptoJS.SHA1(password).toString(),
             };
+
             var url = this.url + '/login/' + username + '/' + userData.authCode;
 
             httpRequester.getJson(url,
@@ -54,9 +56,11 @@ var persister = (function () {
                     localStorage.setItem('authCode', data.SessionKey);
                     localStorage.setItem('userNickname', data.Name);
                     localStorage.setItem('userId', data.Id);
+                    localStorage.setItem('avatarURL', data.AvatarURL);
                 },
                 error);
         },
+
         logout: function () {
             var url = this.url + '/logout/';
 
@@ -69,6 +73,8 @@ var persister = (function () {
                     localStorage.setItem('authCode', '');
                     localStorage.setItem('userNickname', '');
                     localStorage.setItem('userId', '');
+                    localStorage.setItem('avatarUrl', '');
+
                 },
                 function () { console.log('Try again') });
         },
