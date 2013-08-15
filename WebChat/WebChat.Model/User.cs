@@ -23,6 +23,7 @@ namespace WebChat.Model
         public int Id { get; set; }
         public string Name { get; set; }
         public string Password { get; set; }
+        public string SessionKey { get; set; }
     
         public virtual ICollection<Chat> Chats { get; set; }
         public virtual ICollection<Chat> Chats1 { get; set; }

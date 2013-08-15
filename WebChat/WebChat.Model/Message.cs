@@ -12,20 +12,12 @@ namespace WebChat.Model
     using System;
     using System.Collections.Generic;
     
-    public partial class Chat
+    public partial class Message
     {
-        public Chat()
-        {
-            this.Messages = new HashSet<Message>();
-        }
-    
         public int Id { get; set; }
-        public int FirstUserId { get; set; }
-        public int SecondUseeId { get; set; }
-        public string Channel { get; set; }
+        public int ChatID { get; set; }
+        public string MessageContent { get; set; }
     
-        public virtual User User1 { get; set; }
-        public virtual User User2 { get; set; }
-        public virtual ICollection<Message> Messages { get; set; }
+        public virtual Chat Chat { get; set; }
     }
 }

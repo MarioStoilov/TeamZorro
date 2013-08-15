@@ -13,11 +13,11 @@ namespace WebChat.Api.Resolvers
 {
     public class DbWebChatResolver : IDependencyResolver
     {
-        private static DbContext webChatContext = new WebChatEntities();
+        private DbContext webChatContext = new WebChatEntities();
 
-        private static IRepositoryUsers<UserModel> repositoryUsers = new DbUsersRepository(webChatContext);
+        private IRepositoryUsers<UserModel> repositoryUsers;// = new DbUsersRepository(webChatContext);
 
-        private static IRepositoryChats<ChatModel> repositoryChats = new DbChatsRepository(webChatContext);
+        private IRepositoryChats<ChatModel> repositoryChats;// = new DbChatsRepository(webChatContext);
 
 
         public IDependencyScope BeginScope()
@@ -29,10 +29,12 @@ namespace WebChat.Api.Resolvers
         {
             if (serviceType == typeof(UsersController))
             {
+                repositoryUsers = new DbUsersRepository(webChatContext);
                 return new UsersController(repositoryUsers);
             }
             else if (serviceType == typeof(ChatsController))
             {
+                repositoryChats = new DbChatsRepository(webChatContext);
                 return new ChatsController(repositoryChats);
             }
             else

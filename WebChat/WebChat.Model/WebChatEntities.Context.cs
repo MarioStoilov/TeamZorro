@@ -28,9 +28,10 @@ namespace WebChat.Model
             throw new UnintentionalCodeFirstException();
         }
     
-        public DbSet<Chat> Chats { get; set; }
         public DbSet<sysdiagram> sysdiagrams { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Message> Messages { get; set; }
+        public DbSet<Chat> Chats { get; set; }
     
         public virtual int sp_alterdiagram(string diagramname, Nullable<int> owner_id, Nullable<int> version, byte[] definition)
         {
