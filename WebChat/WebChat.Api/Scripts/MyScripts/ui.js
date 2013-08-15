@@ -33,9 +33,8 @@ var ui = (function () {
     function drawLoggedInForm() {
         return '<div id="user-loged-in">' +
                     '<p id="greetings">Hello, ' + localStorage.getItem('userNickname') + '</p>' +
-                    '<p>Let\'s play ...</p>' +
+                    '<p>Let\'s chat ...</p>' +
                     '<button id="button-logout">Log out</button>' +
-                    '<button id="button-create-new-chat">Create new chat</button>' +
                 '</div>';
     }
 
@@ -89,10 +88,10 @@ var ui = (function () {
 
     function drawListOfChats(myActiveChats, container, conatinerTitle, type) {
         $(container)
-            .append($('<h2 />').attr('id', 'games-' + type).text(conatinerTitle))
-            .append($('<ul />').attr({ 'id': 'games-' + type + '-list', 'class': 'show' }));
+            .append($('<h2 />').attr('id', 'chats-' + type).text(conatinerTitle))
+            .append($('<ul />').attr({ 'id': 'chats-' + type + '-list', 'class': 'show' }));
 
-        var elementsContainer = $(container + ' #' + 'games-' + type + '-list');
+        var elementsContainer = $(container + ' #' + 'chats-' + type + '-list');
 
         var currentUser = localStorage.getItem('userId');
 
@@ -108,7 +107,7 @@ var ui = (function () {
 
 
             var currentLi = $('<li />').attr({ 'data-chat-id': myActiveChats[i].Id, 'data-chat-channel': myActiveChats[i].Channel })
-                .append($('<span />').text(otherUser));
+                .append($('<a />').attr('href', '#').text(otherUser));
 
             elementsContainer.append(currentLi);
         }
@@ -128,23 +127,34 @@ var ui = (function () {
     }
 
     function drawCreateGameMenu() {
-        return '<div id="game-user-create">' +
-                    '<label for="create-game-name">Game name </label>' +
-                    '<input id="create-game-name" type="text" name="name" value="" placeholder="Enter game name" />' +
-                    '<label for="create-game-password">Pasword </label>' +
-                    '<input id="create-game-password" type="password" name="name" value="" placeholder="Enter game password" />' +
-                    '<button id="confirm-create-game">OK</button>' +
+        return '<div id="chat-user">' +
+                    '<input id="message-text" type="text" name="name" value="" placeholder="Message" />' +
+                    '<button id="confirm-send">Send</button>' +
                 '</div>';
     }
 
-    function drawJoinGameMenu() {
-        return '<div id="game-user-join">' +
-                    '<label for="join-game-number">Number </label>' +
-                    '<input id="join-game-number" type="text" name="name" value="" placeholder="Enter your number" />' +
-                    '<label for="join-game-password">Pasword </label>' +
-                    '<input id="join-game-password" type="password" name="name" value="" placeholder="Enter game password" />' +
-                    '<button id="confirm-join-game">OK</button>' +
-                '</div>';
+    function drawMessages(data) {
+        var elementsContainer = $('#current-game-state').append($('<ul />'));
+
+        console.log(elementsContainer);
+
+        for (var i = 0; i < data.length; i++) {
+            elementsContainer
+                .append($('<li />').attr('data-owner-id', data[i].OwnerId).text(data[i].Content));
+
+            console.log(data[i].Content);
+            console.log(data[i].OwnerId);
+        }
+
+
+
+        //return '<div id="game-user-join">' +
+        //            '<label for="join-game-number">Number </label>' +
+        //            '<input id="join-game-number" type="text" name="name" value="" placeholder="Enter your number" />' +
+        //            '<label for="join-game-password">Pasword </label>' +
+        //            '<input id="join-game-password" type="password" name="name" value="" placeholder="Enter game password" />' +
+        //            '<button id="confirm-join-game">OK</button>' +
+        //        '</div>';
     }
 
     function drawSidebars(persister) {
@@ -216,6 +226,10 @@ var ui = (function () {
         }
     }
 
+    function drawChatArea() {
+
+    }
+
     return {
         drawLogIn: drawLogInForm,
         drawRegister: drawRegisterForm,
@@ -228,9 +242,10 @@ var ui = (function () {
         drawListOfChats: drawListOfChats,
         drawListOfUsers: drawListOfUsers,
         drawCreateGameMenu: drawCreateGameMenu,
-        drawJoinGameMenu: drawJoinGameMenu,
+        drawMessages: drawMessages,
         drawSidebars: drawSidebars,
         drawCurrentGameState: drawCurrentGameState,
-        showOrHideElements: showOrHideElements
+        showOrHideElements: showOrHideElements,
+        drawChatArea:drawChatArea
     };
 }());

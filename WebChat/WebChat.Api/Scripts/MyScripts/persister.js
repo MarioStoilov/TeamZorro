@@ -123,8 +123,8 @@ var persister = (function () {
         init: function () {
             this.url = mainUrl + '/messages';
         },
-        all: function (success, error) {
-            var url = this.url + '/all/' + localStorage.getItem('authCode');
+        all: function (chatId, success, error) {
+            var url = this.url + '/' + chatId + '/' + localStorage.getItem('authCode');
 
             httpRequester.getJson(url, success, function (err) { console.log(err); });
         },

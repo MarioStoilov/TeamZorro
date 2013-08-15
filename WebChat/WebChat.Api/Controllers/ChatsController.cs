@@ -24,7 +24,6 @@ namespace WebChat.Api.Controllers
         [GET("{sessionkey}")]
         public IEnumerable<ChatModel> Get(string sessionkey)
         {
-
             return this.chatRepository.All(sessionkey).ToList();
         }
 

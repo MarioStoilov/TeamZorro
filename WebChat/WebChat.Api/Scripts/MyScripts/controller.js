@@ -90,9 +90,29 @@ $(document).ready(function () {
                 }
             });
 
-            // Create new game
-            $('#wrapper').on('click', '#user-loged-in #button-create-new-chat', function () {
-                $('#user-loged-in').html(ui.drawCreateGameMenu());
+            // Create new chat
+            $('#wrapper').on('click', '#users-user-list li a', function () {
+                var userID = $(this).parent('li').attr('data-user-id');
+                persister.chat.create(userID, function () {
+                    console.log(userID);
+                    $('#left-side-bar').html(ui.drawSidebars(myMainPersister));
+                },
+                ui.showErrorMessage);
+            });
+
+            // Open chat window
+            $('#wrapper').on('click', '#chats-active-list li a', function () {
+                var chatID = $(this).parent('li').attr('data-chat-id');
+                var channelID = $(this).parent('li').attr('data-chat-channel');
+
+                // TODO: draw ui
+                $('#game-state-container').html(ui.drawCreateGameMenu());
+                
+                persister.messages.all(chatID,
+                    function (data) {
+                        ui.drawMessages(data);
+                        console.log(data);
+                    })
             });
 
             // Create new game confirm

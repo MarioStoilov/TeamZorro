@@ -15,6 +15,8 @@ namespace WebChat.Api.Resolvers
     {
         private DbContext webChatContext = new WebChatEntities();
 
+        private IRepositoryMessages<SerializableMessage> repositoryMessages;
+
         private IRepositoryUsers<UserModel> repositoryUsers;// = new DbUsersRepository(webChatContext);
 
         private IRepositoryChats<ChatModel> repositoryChats;// = new DbChatsRepository(webChatContext);
@@ -36,6 +38,11 @@ namespace WebChat.Api.Resolvers
             {
                 repositoryChats = new DbChatsRepository(webChatContext);
                 return new ChatsController(repositoryChats);
+            }
+            else if (serviceType == typeof(MessagesController))
+            {
+                repositoryMessages = new DbMessagesRepository(webChatContext);
+                return new MessagesController(repositoryMessages);
             }
             else
             {
