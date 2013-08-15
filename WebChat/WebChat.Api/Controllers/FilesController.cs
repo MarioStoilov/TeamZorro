@@ -15,7 +15,7 @@ namespace WebChat.Api.Controllers
 {
     public class FilesController : ApiController
     {
-        private DropBox appAuth = new DropBox { Value = "5hq4n8kjyopqzje", Secret = "22h4xl0x1g569af" };
+        private DropBox appAuth = new DropBox { Value = "3bly71r1syeaw48", Secret = "hzix2mrb4co75t2" };
         private DropBox userAuth = new DropBox { Value = "higmkxi48pfhv8jt", Secret = "0wouwudro53wmkz" };
         //private IRepository<Dropbox> data;
 
