@@ -5,7 +5,7 @@
 /// <reference path="ui.js" />
 
 $(document).ready(function () {
-    var myMainPersister = persister.mainPersister('http://zorrochat.apphb.com/api');//47655
+    var myMainPersister = persister.mainPersister('http://localhost:47655/api');//47655
 
     // Check is user logged in
     if (localStorage.getItem('authCode') == '' || localStorage.getItem('authCode') == null || localStorage.getItem('authCode') == undefined) {
