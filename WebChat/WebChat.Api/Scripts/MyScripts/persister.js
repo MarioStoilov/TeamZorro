@@ -35,7 +35,7 @@ var persister = (function () {
 
             var url = this.url + '/register/' + username + '/' + userData.authCode;
 
-            httpRequester.postJson(url, null,
+            httpRequester.getJson(url,
                 function (data) {
                     localStorage.setItem('authCode', data.sessionKey);
                     localStorage.setItem('userNickname', data.nickname);

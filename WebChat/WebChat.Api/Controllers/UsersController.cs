@@ -33,10 +33,9 @@ namespace WebChat.Api.Controllers
             return this.userRepository.Get(id);
         }
 
-        [POST("register/{username}/{password}")]
-        public UserModel Post(string username, string password)
+        [GET("register/{username}/{password}")]
+        public UserModel GetRegisterUser(string username, string password)
         {
-
             return this.userRepository.Add(new UserModel() { Name = username, PassWord = password });
         }
 
