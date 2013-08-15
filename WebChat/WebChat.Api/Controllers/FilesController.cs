@@ -13,14 +13,14 @@ using WebChat.Repositories.SerializableModels;
 
 namespace WebChat.Api.Controllers
 {
-    public class DropboxController : ApiController
+    public class FilesController : ApiController
     {
         private DropBox appAuth = new DropBox { Value = "5hq4n8kjyopqzje", Secret = "22h4xl0x1g569af" };
         private DropBox userAuth = new DropBox { Value = "higmkxi48pfhv8jt", Secret = "0wouwudro53wmkz" };
         //private IRepository<Dropbox> data;
 
 
-        public DropboxController()
+        public FilesController()
         {
             //this.data = new DropBoxRepository(
             //    ConfigurationManager.AppSettings["MongoConnectionString"]);
