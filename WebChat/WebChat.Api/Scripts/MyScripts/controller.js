@@ -91,9 +91,29 @@ $(document).ready(function () {
                 }
             });
 
+            // Send message
+            $('#wrapper').on('click', '#confirm-send', function () {
+                var messageText = $('#message-text').val();
+                var userID = $(this).attr('data-user-id'); // userId
+                var chatID = $(this).attr('data-chat-id');
+
+                persister.chat.sendMessage(userID, messageText, function () {
+                    persister.messages.all(chatID,
+                    function (data) {
+                        ui.drawMessages(data);
+                    }),
+                    function () {
+                        console.log("Message is not send.");
+                    }
+                });
+
+                $('#message-text').val('');
+            });
+
             // Create new chat
             $('#wrapper').on('click', '#users-user-list li a', function () {
                 var userID = $(this).parent('li').attr('data-user-id');
+
                 persister.chat.create(userID, function () {
                     $('#left-side-bar').html(ui.drawSidebars(myMainPersister));
                 },
@@ -104,8 +124,9 @@ $(document).ready(function () {
             $('#wrapper').on('click', '#chats-active-list li a', function () {
                 var chatID = $(this).parent('li').attr('data-chat-id');
                 var channelID = $(this).parent('li').attr('data-chat-channel');
+                var otherUserID = $(this).parent('li').attr('data-user-id');
 
-                $('#current-chat-container').html(ui.drawSendMessageMenu());
+                $('#current-chat-container').html(ui.drawSendMessageMenu(otherUserID, chatID));
 
                 persister.messages.all(chatID,
                     function (data) {
