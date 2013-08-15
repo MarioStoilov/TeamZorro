@@ -40,7 +40,6 @@ namespace WebChat.Api.Controllers
                 new DropboxServiceProvider(this.appAuth.Value, this.appAuth.Secret, AccessLevel.AppFolder);
             IDropbox dropbox = dropboxServiceProvider.GetApi(userAuth.Value, userAuth.Secret);
 
-
             Entry uploadFileEntry = dropbox.UploadFileAsync(
                 new FileResource(path), filename).Result;
 
@@ -105,5 +104,39 @@ namespace WebChat.Api.Controllers
             return extension;
         }
 
+        [GET("{id}")]
+        public string Get(int id)
+        {
+            WebChatEntities webChatContext = new WebChatEntities();
+
+            User userForImage = (from user in webChatContext.Users
+                             where user.Id == id
+                             select user).FirstOrDefault();
+
+            if (userForImage == null)
+            {
+                throw new ArgumentException("Invalid sessionKey");
+            }
+
+            return GetUserImage(userForImage);
+        }
+
+        private string GetUserImage(User userForImage)
+        {
+            DropboxServiceProvider dropboxServiceProvider =
+                new DropboxServiceProvider(this.appAuth.Value, this.appAuth.Secret, AccessLevel.AppFolder);
+            IDropbox dropbox = dropboxServiceProvider.GetApi(userAuth.Value, userAuth.Secret);
+            try
+            {
+                var sharedUrl = dropbox.GetMediaLinkAsync("/" + userForImage.Id.ToString() + ".jpg").Result;
+                return (sharedUrl.Url);
+            }
+            catch (AggregateException ex)
+            {
+                return null;
+            }
+
+             // we can download the file directly
+        }
     }
 }
