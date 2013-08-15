@@ -57,6 +57,7 @@ var persister = (function () {
                     localStorage.setItem('userNickname', data.Name);
                     localStorage.setItem('userId', data.Id);
                     localStorage.setItem('avatarURL', data.AvatarURL);
+                    console.log(data);
                 },
                 error);
         },
@@ -70,11 +71,11 @@ var persister = (function () {
 
             httpRequester.getJson(url,
                 function () {
-                    localStorage.setItem('authCode', '');
-                    localStorage.setItem('userNickname', '');
-                    localStorage.setItem('userId', '');
-                    localStorage.setItem('avatarUrl', '');
-
+                    //localStorage.setItem('authCode', '');
+                    //localStorage.setItem('userNickname', '');
+                    //localStorage.setItem('userId', '');
+                    //localStorage.setItem('avatarURL', '');
+                    localStorage.clear();
                 },
                 function () { console.log('Try again') });
         },

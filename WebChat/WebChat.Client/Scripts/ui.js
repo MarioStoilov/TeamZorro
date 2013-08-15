@@ -41,12 +41,12 @@ var ui = (function () {
 
     function drawImageOrAskForUpload() {
         var avatarUrl = localStorage.getItem('avatarURL');
-
-        if (!avatarUrl || !avatarUrl == '') {
-            return drawUploadAvatarForm();
+        
+        if (avatarUrl && avatarUrl != "null" && avatarUrl !="" && avatarUrl != null) {
+            return '<img id="avatar" width="80" height="80" src="' + avatarUrl + '" alt="avatar"/>';
         }
         else {
-            return '<img id="avatar" width="80" src="' + avatarUrl + '" alt="avatar"/>';
+            return drawUploadAvatarForm();
         }
     }
 
