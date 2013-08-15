@@ -63,6 +63,7 @@
           <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="50" />
           <Property Name="Password" Type="nvarchar" Nullable="false" MaxLength="50" />
           <Property Name="SessionKey" Type="nvarchar" MaxLength="50" />
+          <Property Name="AvatarURL" Type="nvarchar" MaxLength="100" />
         </EntityType>
         <Association Name="FK_Chats_Users">
           <End Role="Users" Type="WebChatModel.Store.Users" Multiplicity="1" />
@@ -220,6 +221,7 @@
           <NavigationProperty Name="Chats" Relationship="WebChatModel.FK_Chats_Users" FromRole="User" ToRole="Chat" />
           <NavigationProperty Name="Chats1" Relationship="WebChatModel.FK_Chats_Users1" FromRole="User" ToRole="Chat" />
           <NavigationProperty Name="Messages" Relationship="WebChatModel.FK_Messages_Users" FromRole="User" ToRole="Message" />
+          <Property Type="String" Name="AvatarURL" MaxLength="100" FixedLength="false" Unicode="true" />
         </EntityType>
         <ComplexType Name="sp_helpdiagramdefinition_Result">
           <Property Type="Int32" Name="version" Nullable="true" />
@@ -323,6 +325,7 @@
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="WebChatModel.User">
               <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="AvatarURL" ColumnName="AvatarURL" />
                 <ScalarProperty Name="SessionKey" ColumnName="SessionKey" />
                 <ScalarProperty Name="Password" ColumnName="Password" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
