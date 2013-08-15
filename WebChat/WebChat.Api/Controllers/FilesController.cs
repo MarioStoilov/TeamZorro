@@ -10,9 +10,16 @@ using Spring.Social.Dropbox.Api;
 using Spring.Social.Dropbox.Connect;
 using Spring.Social.OAuth1;
 using WebChat.Repositories.SerializableModels;
+using AttributeRouting.Web.Http;
+using WebChat.Model;
+using WebChat.Repositories;
+using System.Data.Entity;
+using System.IO;
+
 
 namespace WebChat.Api.Controllers
 {
+    [AttributeRouting.RoutePrefix("api/files")]
     public class FilesController : ApiController
     {
         private DropBox appAuth = new DropBox { Value = "avebpvpe2pr4o85", Secret = "bz5ysp3dsw0xh6l" };
@@ -43,9 +50,21 @@ namespace WebChat.Api.Controllers
         }
 
 
-        [System.Web.Http.HttpPost]
-        public HttpResponseMessage Post()
+        [POST("{sessionKey}")]
+        public HttpResponseMessage Post(string sessionKey)
         {
+
+            WebChatEntities webChatContext = new WebChatEntities();
+
+            User uploader = (from user in webChatContext.Users
+                             where user.SessionKey == sessionKey
+                             select user).FirstOrDefault();
+
+            if (uploader==null)
+            {
+                throw new ArgumentException("Invalid sessionKey");
+            }
+
             HttpResponseMessage result = null;
             var httpRequest = HttpContext.Current.Request;
             if (httpRequest.Files.Count > 0)
@@ -54,11 +73,16 @@ namespace WebChat.Api.Controllers
                 foreach (string file in httpRequest.Files)
                 {
                     var postedFile = httpRequest.Files[file];
-                    var filePath = HttpContext.Current.Server.MapPath("~/App_Data/" + postedFile.FileName);
+
+                    string extension = GetExtension(postedFile);
+                    
+                    var filePath = HttpContext.Current.Server.MapPath("~/App_Data/" + uploader.Id+extension);
                     postedFile.SaveAs(filePath);
 
 
-                    docfiles.Add(DropboxShareFile(filePath, postedFile.FileName));
+                    docfiles.Add(DropboxShareFile(filePath, uploader.Id.ToString()+extension));
+
+                    File.Delete(filePath);
                 }
                 result = Request.CreateResponse(HttpStatusCode.Created, docfiles);
             }
@@ -67,6 +91,18 @@ namespace WebChat.Api.Controllers
                 result = Request.CreateResponse(HttpStatusCode.BadRequest);
             }
             return result;
+        }
+
+        private static string GetExtension(HttpPostedFile postedFile)
+        {
+            int dotIndex = postedFile.FileName.LastIndexOf('.');
+            string extension = postedFile.FileName.Substring(dotIndex);
+
+            if (extension != ".jpg")
+            {
+                throw new ArgumentException("Only jpg and png files are suported");
+            }
+            return extension;
         }
 
     }
