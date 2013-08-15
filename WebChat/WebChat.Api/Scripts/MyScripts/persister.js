@@ -12,8 +12,7 @@ var persister = (function () {
             this.url = url;
             mainUrl = url;
             this.user = new user(this.url);
-            this.game = new game();
-            this.battle = new battle();
+            this.chat = new chat();
             this.messages = new messages();
         },
         isUserLoggedIn: function () {
@@ -37,8 +36,9 @@ var persister = (function () {
 
             httpRequester.getJson(url,
                 function (data) {
-                    localStorage.setItem('authCode', data.sessionKey);
-                    localStorage.setItem('userNickname', data.nickname);
+                    localStorage.setItem('authCode', data.SessionKey);
+                    localStorage.setItem('userNickname', data.Name);
+                    localStorage.setItem('userId', data.Id);
                 },
                 error);
 
@@ -60,7 +60,7 @@ var persister = (function () {
                 function (data) {
                     localStorage.setItem('authCode', data.SessionKey);
                     localStorage.setItem('userNickname', data.Name);
-                    console.log(data);
+                    localStorage.setItem('userId', data.Id);
                 },
                 error);
 
@@ -82,106 +82,41 @@ var persister = (function () {
                 function () {
                     localStorage.setItem('authCode', '');
                     localStorage.setItem('userNickname', '');
+                    localStorage.setItem('userId', '');
                 },
                 function () { console.log('Try again') });
         },
-        scores: function () {
-            var url = this.url + '/scores/';
-
-            if (true) {
-                url = url + localStorage.getItem('authCode');
-            }
+        all: function (success) {
+            var url = this.url;
 
             httpRequester.getJson(url,
-                function (data) {
-                    console.log('OK');
-                    console.log(data);
-                },
+                success,
                 function () { console.log('Try again') });
         }
     });
 
-    var game = Class.create({
+    var chat = Class.create({
         init: function () {
-            this.url = mainUrl + '/game'
+            this.url = mainUrl + '/chats'
         },
-        create: function (title, password, success, error) {
-            var gameData = {
-                title: title
-            };
-
-            if (password) {
-                gameData.password = password;
-            }
-
-            var url = this.url + '/create/' + localStorage.getItem('authCode');
-
-            httpRequester.postJson(url, gameData, success, error);
-        },
-        join: function (gameID, password, success, error) {
-            var gameData = {
-                id: gameID
-            };
-
-            if (password) {
-                gameData.password = password;
-            }
-
-            var url = this.url + '/join/' + localStorage.getItem('authCode');
-
-            httpRequester.postJson(url, gameData, success, error);
-        },
-        start: function (gameID,success, error) {
-            var url = this.url + '/' +gameID + '/start/' + localStorage.getItem('authCode');
+        create: function (id, success, error) {
+            var url = this.url + '/new/' + id + '/' + localStorage.getItem('authCode');
 
             httpRequester.getJson(url, success, error);
         },
-        open: function (success, error) {
-            var url = this.url + '/open/' + localStorage.getItem('authCode');
+        sendMessage: function (id, content, success, error) {
+            var userModel = { Id: id };
+            var message = { Owner: userModel, Content: content };
 
-            httpRequester.getJson(url, success, error);
-        },
-        myActive: function (success, error) {
-            var url = this.url + '/my-active/' + localStorage.getItem('authCode');
+            var url = this.url + '/senMessage/' + id + '/' + localStorage.getItem('authCode');
 
-            httpRequester.getJson(url, success, function (err) { console.log(err); });
+            httpRequester.postJson(url, null, success, error);
         },
-        field: function (gameID, success, error) {
-            var url = this.url + '/' + gameID + '/field/' + localStorage.getItem('authCode');
+        all: function (success, error) {
+            var url = this.url + '/' + localStorage.getItem('authCode');
 
             httpRequester.getJson(url, success, error);
         }
-    });
-
-    var battle = Class.create({
-        init: function () {
-            this.url = mainUrl + '/battle';
-        },
-        move: function (gameID, currentUnitId, currentUnitPosition, success, error) {
-            var gameData = {
-                unitId: currentUnitId,
-                position: currentUnitPosition
-            };
-
-            var url = this.url + '/' + gameID + '/move/' + localStorage.getItem('authCode');
-
-            httpRequester.postJson(url, gameData, success, error);
-        },
-        attack: function (gameID, currentUnitId, currentUnitPosition, success, error) {
-            var gameData = {
-                unitId: currentUnitId,
-                position: currentUnitPosition
-            };
-
-            var url = this.url + '/' + gameID + '/attack/' + localStorage.getItem('authCode');
-
-            httpRequester.postJson(url, gameData, success, error);
-        },
-        defend: function (gameID, currentUnitId, success, error) {
-            var url = this.url + '/' + gameID + '/defend/' + localStorage.getItem('authCode');
-
-            httpRequester.postJson(url, currentUnitId, success, error);
-        },
     });
 
     var messages = Class.create({
