@@ -104,7 +104,7 @@ var ui = (function () {
             }
             else {
                 otherUser = myActiveChats[i].User2.Name;
-                otherUserId = myActiveChats[i].User1.Id;
+                otherUserId = myActiveChats[i].User2.Id;
             }
 
             var currentLi = $('<li />').attr({
