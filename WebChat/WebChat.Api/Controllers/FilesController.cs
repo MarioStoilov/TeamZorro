@@ -1,14 +1,14 @@
-﻿using Spring.IO;
-using Spring.Social.Dropbox.Api;
-using Spring.Social.Dropbox.Connect;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Web;
 using System.Web.Http;
-using System.Net.Http;
-using System.Web.Mvc;
+using Spring.IO;
+using Spring.Social.Dropbox.Api;
+using Spring.Social.Dropbox.Connect;
+using Spring.Social.OAuth1;
 using WebChat.Repositories.SerializableModels;
 
 namespace WebChat.Api.Controllers
@@ -16,7 +16,6 @@ namespace WebChat.Api.Controllers
     public class FilesController : ApiController
     {
         private DropBox appAuth = new DropBox { Value = "rylhmyfwhpfr1q4", Secret = "udw34fp6pj315j4" };
-        private DropBox userAuth = new DropBox { Value = "higmkxi48pfhv8jt", Secret = "0wouwudro53wmkz" };
         //private IRepository<Dropbox> data;
 
 
@@ -31,7 +30,8 @@ namespace WebChat.Api.Controllers
         {
             DropboxServiceProvider dropboxServiceProvider =
                 new DropboxServiceProvider(this.appAuth.Value, this.appAuth.Secret, AccessLevel.AppFolder);
-            IDropbox dropbox = dropboxServiceProvider.GetApi(this.userAuth.Value, this.userAuth.Secret);
+            OAuthToken userAuth = dropboxServiceProvider.OAuthOperations.FetchRequestTokenAsync(null, null).Result;
+            IDropbox dropbox = dropboxServiceProvider.GetApi(userAuth.Value, userAuth.Secret);
 
 
             Entry uploadFileEntry = dropbox.UploadFileAsync(
