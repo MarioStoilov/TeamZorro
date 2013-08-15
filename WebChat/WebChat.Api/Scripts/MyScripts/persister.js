@@ -58,8 +58,9 @@ var persister = (function () {
 
             httpRequester.getJson(url,
                 function (data) {
-                    localStorage.setItem('authCode', data.sessionKey);
-                    localStorage.setItem('userNickname', data.nickname);
+                    localStorage.setItem('authCode', data.SessionKey);
+                    localStorage.setItem('userNickname', data.Name);
+                    console.log(data);
                 },
                 error);
 
