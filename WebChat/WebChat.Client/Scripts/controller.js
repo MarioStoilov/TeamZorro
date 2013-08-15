@@ -5,7 +5,7 @@
 /// <reference path="ui.js" />
 
 $(document).ready(function () {
-    var myMainPersister = persister.mainPersister('http://localhost:47655/api');//47655
+    var myMainPersister = persister.mainPersister('http://zorrochat.apphb.com/api');//47655
 
     // Check is user logged in
     if (localStorage.getItem('authCode') == '' || localStorage.getItem('authCode') == null || localStorage.getItem('authCode') == undefined) {
@@ -26,6 +26,13 @@ $(document).ready(function () {
     }, 5000);
 
     var eventControler = (function () {
+        var pubnub = PUBNUB.init({
+            publish_key: 'pub-c-434977fa-1ea8-46dc-a69f-4b320b1ccc34',
+            subscribe_key: 'sub-c-834dd9e0-04b8-11e3-8dc9-02ee2ddab7fe',
+            origin: 'pubsub.pubnub.com',
+            ssl: 'off'
+        })
+
         function addElementsEvents(persister) {
             // Logout
             $('#wrapper').on('click', '#user-loged-in #button-logout', function () {
@@ -91,9 +98,36 @@ $(document).ready(function () {
                 }
             });
 
+            // Send message
+            $('#wrapper').on('click', '#confirm-send', function () {
+                var messageText = $('#message-text').val();
+                var userID = $(this).attr('data-user-id');
+                var chatID = $(this).attr('data-chat-id');
+                var channelID = $(this).attr('data-channel-id');
+
+                persister.chat.sendMessage(userID, messageText, function () {
+                    persister.messages.all(chatID,
+                    function (data) {
+                        ui.drawMessages(data);
+                    }),
+                    function () {
+                        console.log("Message is not send.");
+                    }
+                });
+
+                // SEND
+                pubnub.publish({
+                    channel: channelID,
+                    message: localStorage.getItem('userNickname') + ': ' + messageText
+                });
+
+                $('#message-text').val('');
+            });
+
             // Create new chat
             $('#wrapper').on('click', '#users-user-list li a', function () {
                 var userID = $(this).parent('li').attr('data-user-id');
+
                 persister.chat.create(userID, function () {
                     $('#left-side-bar').html(ui.drawSidebars(myMainPersister));
                 },
@@ -104,13 +138,23 @@ $(document).ready(function () {
             $('#wrapper').on('click', '#chats-active-list li a', function () {
                 var chatID = $(this).parent('li').attr('data-chat-id');
                 var channelID = $(this).parent('li').attr('data-chat-channel');
+                var otherUserID = $(this).parent('li').attr('data-user-id');
 
-                $('#current-chat-container').html(ui.drawSendMessageMenu());
+                $('#current-chat-container').html(ui.drawSendMessageMenu(otherUserID, chatID, channelID));
 
                 persister.messages.all(chatID,
                     function (data) {
                         ui.drawMessages(data);
                     })
+
+                //LISTEN
+                pubnub.subscribe({
+                    channel: channelID,
+                    message: function (m) {
+                        $('#current-chat-state ul').append($('<li />').text(m));
+                    }
+                    //connect: publish
+                })
             });
 
             // Create new game confirm

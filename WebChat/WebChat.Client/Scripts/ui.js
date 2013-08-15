@@ -78,8 +78,8 @@ var ui = (function () {
     }
 
     function showErrorMessage(err) {
-        //$('#error-messages').text(err.responseJSON.errCode + ': ' + err.responseJSON.Message);
-        $('#error-messages').text(err.responseJSON.Message);
+        $('#error-messages').text(err);
+
 
         setTimeout(function () {
             $('#error-messages').text('');
@@ -87,6 +87,7 @@ var ui = (function () {
     }
 
     function showMessage(message) {
+
         $('#messages').text(message);
 
         setTimeout(function () {
@@ -122,17 +123,22 @@ var ui = (function () {
 
         for (var i = 0; i < myActiveChats.length; i++) {
             var otherUser;
+            var otherUserId;
 
             if (myActiveChats[i].User1.Id != currentUser) {
                 otherUser = myActiveChats[i].User1.Name;
+                otherUserId = myActiveChats[i].User1.Id;
             }
             else {
                 otherUser = myActiveChats[i].User2.Name;
+                otherUserId = myActiveChats[i].User2.Id;
             }
 
-
-            var currentLi = $('<li />').attr({ 'data-chat-id': myActiveChats[i].Id, 'data-chat-channel': myActiveChats[i].Channel })
-                .append($('<a />').attr('href', '#').text(otherUser));
+            var currentLi = $('<li />').attr({
+                'data-chat-id': myActiveChats[i].Id,
+                'data-chat-channel': myActiveChats[i].Channel,
+                'data-user-id': otherUserId
+            }).append($('<a />').attr('href', '#').text(otherUser));
 
             elementsContainer.append(currentLi);
         }
@@ -151,10 +157,10 @@ var ui = (function () {
         }
     }
 
-    function drawSendMessageMenu() {
+    function drawSendMessageMenu(otherUserID, chatId, channelID) {
         return '<div id="chat-user">' +
                     '<input id="message-text" type="text" name="name" value="" placeholder="Message" />' +
-                    '<button id="confirm-send">Send</button>' +
+                    '<button id="confirm-send" data-user-id="' + otherUserID + '" data-chat-id="' + chatId + '" data-channel-id="' + channelID + '">Send</button>' +
                 '</div>';
     }
 

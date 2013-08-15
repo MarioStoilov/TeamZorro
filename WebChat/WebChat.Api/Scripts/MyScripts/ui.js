@@ -33,15 +33,40 @@ var ui = (function () {
     function drawLoggedInForm() {
         return '<div id="user-loged-in">' +
                     '<p id="greetings">Hello, ' + localStorage.getItem('userNickname') + '</p>' +
+                    drawImageOrAskForUpload() +
                     '<p>Let\'s chat ...</p>' +
                     '<button id="button-logout">Log out</button>' +
                 '</div>';
+    }
+
+    function drawImageOrAskForUpload() {
+        var avatarUrl = localStorage.getItem('avatarURL');
+        
+        if (avatarUrl && avatarUrl != "null" && avatarUrl !="" && avatarUrl != null) {
+            return '<img id="avatar" width="80" height="80" src="' + avatarUrl + '" alt="avatar"/>';
+        }
+        else {
+            return drawUploadAvatarForm();
+        }
     }
 
     function drawUserInteraction() {
         return '<div id="error-messages"></div>' +
                '<div id="messages"></div>' +
                '<div id="current-chat-container"></div>';
+    }
+
+    function drawUploadAvatarForm() {
+        return '<span class="btn btn-success fileinput-button">' +
+            '<i class="icon-plus icon-white"></i>' +
+            '<span>Upload image...</span>' +
+            '<input id="fileupload" type="file" accept="image/*">' +
+        '</span>' +
+        '<br>' +
+        '<br>' +
+        '<div style="display:none" id="progress" class="progress progress-success progress-striped">' +
+            '<div class="bar"></div>' +
+        '</div>';
     }
 
     function showAppErrorMessage(message) {
@@ -55,12 +80,14 @@ var ui = (function () {
     function showErrorMessage(err) {
         $('#error-messages').text(err);
 
+
         setTimeout(function () {
             $('#error-messages').text('');
         }, 15000);
     }
 
     function showMessage(message) {
+
         $('#messages').text(message);
 
         setTimeout(function () {

@@ -226,4 +226,31 @@ $(document).ready(function () {
     }());
 
     eventControler.addEvents(myMainPersister);
+
+
+    $(function () {
+        'use strict';
+        // Change this to the location of your server-side upload handler:
+        console.log("nesho");
+        var url = 'http://localhost:47655/api/files/' + localStorage.getItem('authCode');
+        $('#fileupload').fileupload({
+            url: url,
+            dataType: 'json',
+            done: function (e, data) {
+                alert("Image successfully. Please refresh your browser.");
+                $('#login-container').html(ui.drawLoggedIn());
+            },
+            progressall: function (e, data) {
+                $("#progress").show();
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+                $('#progress .bar').css(
+                    'width',
+                    progress + '%'
+                );
+            }
+        }).prop('disabled', !$.support.fileInput)
+            .parent().addClass($.support.fileInput ? undefined : 'disabled');
+
+        //$("#fileupload").hide();
+    });
 });

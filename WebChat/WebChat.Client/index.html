@@ -2,6 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>WebChat Client</title>
+    <script src="http://cdn.pubnub.com/pubnub-3.5.3.min.js"></script>
     <script src="Scripts/jquery-2.0.3.min.js"></script>
     <script src="Scripts/http-requester.js"></script>
     <script src="Scripts/class.js"></script>
@@ -19,10 +20,10 @@
     <link href="Styles/register.css" rel="stylesheet" />
     <link href="Styles/user-logged-in.css" rel="stylesheet" />
     <link href="Styles/Site.css" rel="stylesheet" />
-    <link href="http://blueimp.github.io/cdn/css/bootstrap.min.css" rel="stylesheet">
-    <link href="Styles/style.css" rel="stylesheet">
-    <link href="http://blueimp.github.io/cdn/css/bootstrap-responsive.min.css" rel="stylesheet">
-    <link href="Styles/jquery.fileupload-ui.css" rel="stylesheet">
+    <link href="http://blueimp.github.io/cdn/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="Styles/style.css" rel="stylesheet" />
+    <link href="http://blueimp.github.io/cdn/css/bootstrap-responsive.min.css" rel="stylesheet" />
+    <link href="Styles/jquery.fileupload-ui.css" rel="stylesheet" />
 </head>
 <body>
     <div id="wrapper">
@@ -30,38 +31,14 @@
         </div>
         <div id="current-game-container">
             <div id="login-container"></div>
-            <div id="main-game-container">
+            <div id="main-chat-container">
                 <div id="error-messages"></div>
             </div>
-            <div id="current-game-state">
+            <div id="current-chat-state">
             </div>
         </div>
         <div id="right-side-bar">
         </div>
     </div>
-  <!--  <script>
-
-        $(function () {
-            'use strict';
-            // Change this to the location of your server-side upload handler:
-            var url = 'http://localhost:47655/api/files/';
-            $('#fileupload').fileupload({
-                url: url,
-                dataType: 'json',
-                done: function (e, data) {
-                    alert("Image successfully.");
-                },
-                progressall: function (e, data) {
-                    $("#progress").show();
-                    var progress = parseInt(data.loaded / data.total * 100, 10);
-                    $('#progress .bar').css(
-                        'width',
-                        progress + '%'
-                    );
-                }
-            }).prop('disabled', !$.support.fileInput)
-                .parent().addClass($.support.fileInput ? undefined : 'disabled');
-        });
-    </script>-->
 </body>
 </html>

@@ -15,7 +15,10 @@ namespace WebChat.Api
                         "~/Scripts/MyScripts/persister.js",
                         "~/Scripts/MyScripts/validation-controler.js",
                         "~/Scripts/MyScripts/ui.js",
-                        "~/Scripts/MyScripts/controller.js"));
+                        "~/Scripts/MyScripts/controller.js",
+						"~/Scripts/MyScripts/jquery.fileupload.js",
+						"~/Scripts/MyScripts/jquery.iframe-transport.js",
+						"~/Scripts/MyScripts/vendor/jquery.ui.widget.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryui").Include(
                         "~/Scripts/jquery-ui-{version}.js"));

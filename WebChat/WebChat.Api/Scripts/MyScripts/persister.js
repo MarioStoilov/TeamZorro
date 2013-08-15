@@ -42,11 +42,13 @@ var persister = (function () {
                 },
                 error);
         },
+
         login: function (username, password, error) {
             var userData = {
                 "username": username,
-                "authCode": CryptoJS.SHA1(password).toString()
+                "authCode": CryptoJS.SHA1(password).toString(),
             };
+
             var url = this.url + '/login/' + username + '/' + userData.authCode;
 
             httpRequester.getJson(url,
@@ -54,9 +56,12 @@ var persister = (function () {
                     localStorage.setItem('authCode', data.SessionKey);
                     localStorage.setItem('userNickname', data.Name);
                     localStorage.setItem('userId', data.Id);
+                    localStorage.setItem('avatarURL', data.AvatarURL);
+                    console.log(data);
                 },
                 error);
         },
+
         logout: function () {
             var url = this.url + '/logout/';
 
@@ -66,9 +71,11 @@ var persister = (function () {
 
             httpRequester.getJson(url,
                 function () {
-                    localStorage.setItem('authCode', '');
-                    localStorage.setItem('userNickname', '');
-                    localStorage.setItem('userId', '');
+                    //localStorage.setItem('authCode', '');
+                    //localStorage.setItem('userNickname', '');
+                    //localStorage.setItem('userId', '');
+                    //localStorage.setItem('avatarURL', '');
+                    localStorage.clear();
                 },
                 function () { console.log('Try again') });
         },
@@ -96,7 +103,7 @@ var persister = (function () {
 
             var url = this.url + '/senMessage/' + id + '/' + localStorage.getItem('authCode');
 
-            httpRequester.postJson(url, message, success, error);
+            httpRequester.postJson(url, null, success, error);
         },
         all: function (success, error) {
             var url = this.url + '/' + localStorage.getItem('authCode');

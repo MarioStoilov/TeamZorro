@@ -85,7 +85,7 @@ h2:hover{
     text-align:center;
 }
 
-#game-state-container table{
+#current-chat-container table{
     border:1px solid black;
     border-spacing:0;
     border-collapse:collapse;
@@ -93,15 +93,15 @@ h2:hover{
     width:98%;
 }
 
-#game-state-container table td,
-#game-state-container table th{
+#current-chat-container table td,
+#current-chat-container table th{
     border:1px solid black;
     width:10%;
     height:20px;
     text-align:center;
 }
 
-#game-state-container table td:hover{
+#current-chat-container table td:hover{
     cursor:pointer;
 }
 
@@ -154,4 +154,28 @@ h2:hover{
 
 #confirm-send{
     width:15%;
+}
+
+#current-chat-state ul{
+    list-style-type:none;
+}
+
+/* extra styles */
+#current-chat-state, #current-chat-container {
+    font-family: Georgia,serif;
+    font-size: 16px;
+    line-height: 1.45;
+}
+
+#greetings {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+#current-game-container {
+    text-align: center;
+}
+
+#current-chat-state {
+    text-align: left;
 }
