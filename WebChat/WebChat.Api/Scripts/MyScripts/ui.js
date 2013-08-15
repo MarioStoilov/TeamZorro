@@ -130,10 +130,10 @@ var ui = (function () {
         }
     }
 
-    function drawSendMessageMenu(otherUserID, chatId) {
+    function drawSendMessageMenu(otherUserID, chatId, channelID) {
         return '<div id="chat-user">' +
                     '<input id="message-text" type="text" name="name" value="" placeholder="Message" />' +
-                    '<button id="confirm-send" data-user-id="' + otherUserID + '" data-chat-id="' + chatId + '">Send</button>' +
+                    '<button id="confirm-send" data-user-id="' + otherUserID + '" data-chat-id="' + chatId + '" data-channel-id="' + channelID + '">Send</button>' +
                 '</div>';
     }
 

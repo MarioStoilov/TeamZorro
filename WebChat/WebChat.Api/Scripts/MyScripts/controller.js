@@ -26,6 +26,13 @@ $(document).ready(function () {
     }, 5000);
 
     var eventControler = (function () {
+        var pubnub = PUBNUB.init({
+            publish_key: 'pub-c-434977fa-1ea8-46dc-a69f-4b320b1ccc34',
+            subscribe_key: 'sub-c-834dd9e0-04b8-11e3-8dc9-02ee2ddab7fe',
+            origin: 'pubsub.pubnub.com',
+            ssl: 'off'
+        })
+
         function addElementsEvents(persister) {
             // Logout
             $('#wrapper').on('click', '#user-loged-in #button-logout', function () {
@@ -94,8 +101,9 @@ $(document).ready(function () {
             // Send message
             $('#wrapper').on('click', '#confirm-send', function () {
                 var messageText = $('#message-text').val();
-                var userID = $(this).attr('data-user-id'); // userId
+                var userID = $(this).attr('data-user-id');
                 var chatID = $(this).attr('data-chat-id');
+                var channelID = $(this).attr('data-channel-id');
 
                 persister.chat.sendMessage(userID, messageText, function () {
                     persister.messages.all(chatID,
@@ -106,6 +114,14 @@ $(document).ready(function () {
                         console.log("Message is not send.");
                     }
                 });
+
+                // SEND
+                function publish(channel, messageText) {
+                    pubnub.publish({
+                        channel: channelID,
+                        message: messageText
+                    })
+                }
 
                 $('#message-text').val('');
             });
@@ -126,12 +142,21 @@ $(document).ready(function () {
                 var channelID = $(this).parent('li').attr('data-chat-channel');
                 var otherUserID = $(this).parent('li').attr('data-user-id');
 
-                $('#current-chat-container').html(ui.drawSendMessageMenu(otherUserID, chatID));
+                $('#current-chat-container').html(ui.drawSendMessageMenu(otherUserID, chatID, channelID));
 
                 persister.messages.all(chatID,
                     function (data) {
                         ui.drawMessages(data);
                     })
+
+                //LISTEN
+                pubnub.subscribe({
+                    channel: channelID,
+                    message: function (m) {
+                        $('#current-chat-state ul').append($('<li />').text(m));
+                    }
+                    //connect: publish
+                })
             });
 
             // Create new game confirm
