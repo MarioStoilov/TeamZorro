@@ -1,5 +1,4 @@
-﻿using Spring.Http;
-using Spring.IO;
+﻿using Spring.IO;
 using Spring.Social.Dropbox.Api;
 using Spring.Social.Dropbox.Connect;
 using System;
@@ -8,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Http;
+using System.Net.Http;
 using System.Web.Mvc;
 using WebChat.Repositories.SerializableModels;
 
@@ -43,7 +43,7 @@ namespace WebChat.Api.Controllers
         }
 
 
-        //[HttpPost]
+        [System.Web.Http.HttpPost]
         public HttpResponseMessage Post()
         {
             HttpResponseMessage result = null;
@@ -60,11 +60,11 @@ namespace WebChat.Api.Controllers
 
                     docfiles.Add(DropboxShareFile(filePath, postedFile.FileName));
                 }
-                //result = Request.CreateResponse(HttpStatusCode.Created, docfiles);
+                result = Request.CreateResponse(HttpStatusCode.Created, docfiles);
             }
             else
             {
-                //result = Request.CreateResponse(HttpStatusCode.BadRequest);
+                result = Request.CreateResponse(HttpStatusCode.BadRequest);
             }
             return result;
         }
