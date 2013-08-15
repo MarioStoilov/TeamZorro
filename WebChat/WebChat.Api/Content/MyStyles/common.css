@@ -159,3 +159,23 @@ h2:hover{
 #current-chat-state ul{
     list-style-type:none;
 }
+
+/* extra styles */
+#current-chat-state, #current-chat-container {
+    font-family: Georgia,serif;
+    font-size: 16px;
+    line-height: 1.45;
+}
+
+#greetings {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+#current-game-container {
+    text-align: center;
+}
+
+#current-chat-state {
+    text-align: left;
+}
