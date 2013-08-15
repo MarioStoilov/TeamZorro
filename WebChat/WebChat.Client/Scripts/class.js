@@ -1,5 +1,6 @@
 ﻿var Class = (function () {
-    function subclass() { }
+    function subclass() {
+    }
 
     function createClass(properties) {
         function f() {
@@ -11,7 +12,8 @@
             prototype[prop] = properties[prop];
         }
         if (!prototype.init) {
-            prototype.init = function () { };
+            prototype.init = function () {
+            };
         }
 
         f.prototype = prototype;
@@ -62,5 +64,4 @@
         create: createClass
     };
 }());
-
 // module.exports = Class;

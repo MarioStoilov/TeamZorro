@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebChat.Client", "WebChat.Client\WebChat.Client.csproj", "{249BE855-1B27-473D-9CAA-0B99A5C3ED53}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebChat.Repositories", "WebChat.Repositories\WebChat.Repositories.csproj", "{D1DA8A75-430B-4DF4-894A-852AE196E9EE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebChat.Model", "WebChat.Model\WebChat.Model.csproj", "{F750A0C6-6FB4-4A32-BB31-F36AAD19FEA3}"
@@ -16,16 +14,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{2AC53E
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebChat.Client", "WebChat.Client\WebChat.Client.csproj", "{F025C969-AC04-4974-B936-1E6E3EB9BCD7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{249BE855-1B27-473D-9CAA-0B99A5C3ED53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{249BE855-1B27-473D-9CAA-0B99A5C3ED53}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{249BE855-1B27-473D-9CAA-0B99A5C3ED53}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{249BE855-1B27-473D-9CAA-0B99A5C3ED53}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D1DA8A75-430B-4DF4-894A-852AE196E9EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D1DA8A75-430B-4DF4-894A-852AE196E9EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D1DA8A75-430B-4DF4-894A-852AE196E9EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -38,6 +34,10 @@ Global
 		{995ECFA7-C65A-41B5-AD0F-6E0FFF6222EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{995ECFA7-C65A-41B5-AD0F-6E0FFF6222EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{995ECFA7-C65A-41B5-AD0F-6E0FFF6222EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F025C969-AC04-4974-B936-1E6E3EB9BCD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F025C969-AC04-4974-B936-1E6E3EB9BCD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F025C969-AC04-4974-B936-1E6E3EB9BCD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F025C969-AC04-4974-B936-1E6E3EB9BCD7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,30 +1,33 @@
-﻿/// <reference path="jquery-2.0.3.intellisense.js" />
-var httpRequester = (function () {
-    function getJSON(url, success, error) {
+﻿/// <reference path="../jquery-2.0.2.js" />
+
+var httpRequester = (function(){
+    function getJson(url, success, error) {
         $.ajax({
             url: url,
-            type: "GET",
-            timeout: 5000,
-            //dataType: "jsonp",
-            contentType: "application/json",
+            type: 'GET',
+            //async: false,
+            timeout:5000,
+            contentType: 'application/json',
             success: success,
             error: error
         });
     }
-    function postJSON(url, data, success, error) {
+
+    function postJson(url, data, success, error) {
         $.ajax({
             url: url,
-            type: "POST",
-            //dataType: "jsonp",
-            contentType: "application/json",
+            type: 'POST',
+            //async: false,
             timeout: 5000,
             data: JSON.stringify(data),
+            contentType: 'application/json',
             success: success,
             error: error
         });
     }
+
     return {
-        getJSON: getJSON,
-        postJSON: postJSON
-    };
+        getJson: getJson,
+        postJson: postJson
+    }
 }());
